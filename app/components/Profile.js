@@ -1,7 +1,5 @@
+// React Native components
 var React = require('react-native');
-var ProgressBar = require('react-native-progress-bar');
-var Button = require('react-native-button');
-var api = require('../lib/api')
 var View = React.View;
 var Text = React.Text;
 var Image = React.Image;
@@ -9,6 +7,13 @@ var ListView = React.ListView;
 var Navigator = React.Navigator;
 var StyleSheet = React.StyleSheet;
 var TouchableOpacity = React.TouchableOpacity;
+
+// External libraries and components
+var Button = require('react-native-button');
+var ProgressBar = require('react-native-progress-bar');
+
+// Custom components and methods
+var api = require('../lib/api');
 
 var Profile = React.createClass({
   getInitialState: function () {

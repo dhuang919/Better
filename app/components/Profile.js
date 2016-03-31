@@ -86,7 +86,7 @@ var Profile = React.createClass({
     var nonStreakBadges = {
       'First Step': true,
       'Better Already': true,
-      'Top of the World': true
+      'Top of the World': true,
     };
 
     badges.forEach(function (badge, i) {
@@ -152,7 +152,6 @@ var Profile = React.createClass({
       goal = 5;
       goalName = 'Gone Streaking';
     }
-
     return {
       progress: progress,
       goal: goal,
@@ -165,7 +164,7 @@ var Profile = React.createClass({
     // earned and unearned badges can be differentiated
     this.props.navigator.push({
       id: 'Badges',
-      earnedBadges: this.state.user.badges
+      earnedBadges: this.state.user.badges,
     });
   },
 

@@ -56,7 +56,6 @@ var deleteHabit = function (email, habitId) {
     })
     .then(function (habits) {
       var habit = habits.store.id(habitId);
-      console.log('HABIT:', habit);
       if (habit.reminder.active) {
         habit.reminder.stop();
       }

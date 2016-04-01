@@ -29,7 +29,8 @@ describe('Database', function () {
 
     // Example user
     var user = {
-      email: 'yolo@yolo.com'
+      email: 'yolo@yolo.com',
+      nickname: 'yolo'
     };
 
     // Example habits with habit1Id to be assigned in
@@ -62,8 +63,8 @@ describe('Database', function () {
           .send(habit1)
           .expect(201)
           .expect(function (res) {
-            habit1Id = res.body._id;
-            instance1Id = res.body.instancesId;
+            habit1Id = res.body.habit._id;
+            instance1Id = res.body.habit.instancesId;
           })
           .end(function () {
             request(app)
@@ -164,7 +165,6 @@ describe('Database', function () {
       it('should delete habit and corresponding instance store', function (done) {
         helpers.deleteHabit(user.email, habit1Id)
           .then(function (success) {
-            console.log('DELETE:', success);
             expect(success._id.toString()).to.equal(habit1Id);
 
             // In order to confirm instance was deleted,

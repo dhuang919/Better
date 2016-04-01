@@ -241,7 +241,7 @@ describe('Database', function () {
       it('should create an instance for existing habit', function (done) {
         helpers.toggleInstance(user.email, habit1Id)
           .then(function (success) {
-            expect(success._id).to.exist;
+            expect(success.instance._id).to.exist;
             done();
           })
           .catch(function (fail) {

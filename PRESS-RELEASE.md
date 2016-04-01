@@ -10,4 +10,4 @@
   > Life is hard! So is forming new habits. Put them together, and you need some help. Better can help.
 
 ## Getting Started ##
-  > Getting started with Better couldn't be easier. Download, login, and we'll guide you through the process of building your very first new habit! The first step to getting better only take a couple of minutes.
+  > Getting started with Better couldn't be easier. Download, login, and we'll guide you through the process of building your very first new habit! The first step to getting better only takes a couple of minutes.

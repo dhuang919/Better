@@ -1,7 +1,5 @@
+// React Native components
 var React = require('react-native');
-var ProgressBar = require('react-native-progress-bar');
-var Button = require('react-native-button');
-var api = require('../lib/api')
 var View = React.View;
 var Text = React.Text;
 var Image = React.Image;
@@ -9,6 +7,13 @@ var ListView = React.ListView;
 var Navigator = React.Navigator;
 var StyleSheet = React.StyleSheet;
 var TouchableOpacity = React.TouchableOpacity;
+
+// External libraries and components
+var Button = require('react-native-button');
+var ProgressBar = require('react-native-progress-bar');
+
+// Custom components and methods
+var api = require('../lib/api');
 
 var Profile = React.createClass({
   getInitialState: function () {
@@ -81,7 +86,7 @@ var Profile = React.createClass({
     var nonStreakBadges = {
       'First Step': true,
       'Better Already': true,
-      'Top of the World': true
+      'Top of the World': true,
     };
 
     badges.forEach(function (badge, i) {
@@ -147,7 +152,6 @@ var Profile = React.createClass({
       goal = 5;
       goalName = 'Gone Streaking';
     }
-
     return {
       progress: progress,
       goal: goal,
@@ -160,7 +164,7 @@ var Profile = React.createClass({
     // earned and unearned badges can be differentiated
     this.props.navigator.push({
       id: 'Badges',
-      earnedBadges: this.state.user.badges
+      earnedBadges: this.state.user.badges,
     });
   },
 

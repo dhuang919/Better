@@ -1,11 +1,13 @@
+// React Native components
 var React = require('react-native');
 var View = React.View;
 var Text = React.Text;
+var Navigator = React.Navigator;
 var StyleSheet = React.StyleSheet;
 var TouchableOpacity = React.TouchableOpacity;
-var Navigator = React.Navigator;
-var api = require('../lib/api');
 
+// Custom components and methods
+var api = require('../lib/api');
 var Profile = require('../components/Profile');
 var BadgeView = require('../components/BadgeView');
 

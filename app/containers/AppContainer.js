@@ -6,13 +6,13 @@ var Navigator = React.Navigator;
 var TouchableOpacity = React.TouchableOpacity;
 
 // App components
-var LoadingContainer = require('./LoadingContainer');
-var Onboard = require('./OnboardContainer');
-var Welcome = require('../components/Welcome');
-var AddHabit = require('./CreateContainer');
 var Habits = require('./InboxContainer');
-var HabitSettings = require('../components/HabitSettings');
+var Onboard = require('./OnboardContainer');
+var AddHabit = require('./CreateContainer');
+var Welcome = require('../components/Welcome');
+var LoadingContainer = require('./LoadingContainer');
 var HabitDetails = require('../components/HabitDetails');
+var HabitSettings = require('../components/HabitSettings');
 var InstanceHistory = require('../components/InstanceHistory');
 
 var AppContainer = React.createClass({

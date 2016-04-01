@@ -23,13 +23,14 @@ var Instances = require('../db/models').Instances;
 // Helper functions which query db
 var helpers = require('../server/helpers');
 
-xdescribe('Database', function () {
+describe('Database', function () {
 
   describe('Helpers', function () {
 
     // Example user
     var user = {
-      email: 'yolo@yolo.com'
+      email: 'yolo@yolo.com',
+      nickname: 'yolo'
     };
 
     // Example habits with habit1Id to be assigned in
@@ -62,8 +63,8 @@ xdescribe('Database', function () {
           .send(habit1)
           .expect(201)
           .expect(function (res) {
-            habit1Id = res.body._id;
-            instance1Id = res.body.instancesId;
+            habit1Id = res.body.habit._id;
+            instance1Id = res.body.habit.instancesId;
           })
           .end(function () {
             request(app)
@@ -103,7 +104,6 @@ xdescribe('Database', function () {
     });
 
     describe('getHabits', function () {
-
       it('should be a function', function (done) {
         expect(helpers.getHabits).to.be.a('function');
         done();
@@ -120,11 +120,9 @@ xdescribe('Database', function () {
             console.error('DbSpec getHabits error:', fail);
           });
       });
-
     });
 
     describe('addHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.addHabit).to.be.a('function');
         done();
@@ -136,8 +134,8 @@ xdescribe('Database', function () {
         };
         helpers.addHabit(user.email, habit3)
           .then(function (success) {
-            expect(success.action).to.equal(habit3.action);
-            expect(success.instancesId).to.exist;
+            expect(success.habit.action).to.equal(habit3.action);
+            expect(success.habit.instancesId).to.exist;
             done();
           })
           .catch(function (fail) {
@@ -156,18 +154,14 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('deleteHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.deleteHabit).to.be.a('function');
         done();
       });
 
-      // TODO: refactor after updated deleteHabit helper is implemented
-      // success data will be modified
       it('should delete habit and corresponding instance store', function (done) {
         helpers.deleteHabit(user.email, habit1Id)
           .then(function (success) {
@@ -197,11 +191,9 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('updateHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.updateHabit).to.be.a('function');
         done();
@@ -238,11 +230,9 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('toggleInstance', function () {
-
       it('should be a function', function (done) {
         expect(helpers.toggleInstance).to.be.a('function');
         done();
@@ -251,7 +241,7 @@ xdescribe('Database', function () {
       it('should create an instance for existing habit', function (done) {
         helpers.toggleInstance(user.email, habit1Id)
           .then(function (success) {
-            expect(success._id).to.exist;
+            expect(success.instance._id).to.exist;
             done();
           })
           .catch(function (fail) {
@@ -302,7 +292,6 @@ xdescribe('Database', function () {
             console.log('DbSpec toggleInstance error:', err);
           });
       });
-
     });
 
   });

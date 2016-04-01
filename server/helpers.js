@@ -44,9 +44,9 @@ var addHabit = function (email, habitDetails) {
       habits.save();
       return {
         badge: badge,
-        habit: habit
-      }
-    })
+        habit: habit,
+      };
+    });
 };
 
 var deleteHabit = function (email, habitId) {

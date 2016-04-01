@@ -23,7 +23,7 @@ var Instances = require('../db/models').Instances;
 // Helper functions which query db
 var helpers = require('../server/helpers');
 
-xdescribe('Database', function () {
+describe('Database', function () {
 
   describe('Helpers', function () {
 
@@ -103,7 +103,6 @@ xdescribe('Database', function () {
     });
 
     describe('getHabits', function () {
-
       it('should be a function', function (done) {
         expect(helpers.getHabits).to.be.a('function');
         done();
@@ -120,11 +119,9 @@ xdescribe('Database', function () {
             console.error('DbSpec getHabits error:', fail);
           });
       });
-
     });
 
     describe('addHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.addHabit).to.be.a('function');
         done();
@@ -136,8 +133,8 @@ xdescribe('Database', function () {
         };
         helpers.addHabit(user.email, habit3)
           .then(function (success) {
-            expect(success.action).to.equal(habit3.action);
-            expect(success.instancesId).to.exist;
+            expect(success.habit.action).to.equal(habit3.action);
+            expect(success.habit.instancesId).to.exist;
             done();
           })
           .catch(function (fail) {
@@ -156,21 +153,18 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('deleteHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.deleteHabit).to.be.a('function');
         done();
       });
 
-      // TODO: refactor after updated deleteHabit helper is implemented
-      // success data will be modified
       it('should delete habit and corresponding instance store', function (done) {
         helpers.deleteHabit(user.email, habit1Id)
           .then(function (success) {
+            console.log('DELETE:', success);
             expect(success._id.toString()).to.equal(habit1Id);
 
             // In order to confirm instance was deleted,
@@ -197,11 +191,9 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('updateHabit', function () {
-
       it('should be a function', function (done) {
         expect(helpers.updateHabit).to.be.a('function');
         done();
@@ -238,11 +230,9 @@ xdescribe('Database', function () {
             done();
           });
       });
-
     });
 
     describe('toggleInstance', function () {
-
       it('should be a function', function (done) {
         expect(helpers.toggleInstance).to.be.a('function');
         done();
@@ -302,7 +292,6 @@ xdescribe('Database', function () {
             console.log('DbSpec toggleInstance error:', err);
           });
       });
-
     });
 
   });

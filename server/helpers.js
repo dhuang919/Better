@@ -44,9 +44,9 @@ var addHabit = function (email, habitDetails) {
       habits.save();
       return {
         badge: badge,
-        habit: habit
-      }
-    })
+        habit: habit,
+      };
+    });
 };
 
 var deleteHabit = function (email, habitId) {
@@ -56,6 +56,7 @@ var deleteHabit = function (email, habitId) {
     })
     .then(function (habits) {
       var habit = habits.store.id(habitId);
+      console.log('HABIT:', habit);
       if (habit.reminder.active) {
         habit.reminder.stop();
       }

@@ -1,19 +1,19 @@
-var React = require('react-native');
-var SegmentedControls = require('react-native-radio-buttons').SegmentedControls;
-var Text = React.Text;
-var View = React.View;
-var TextInput = React.TextInput;
-var PropTypes = React.PropTypes;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-var Button = require('react-native-button');
+import React, {
+  Text,
+  View,
+  TextInput,
+  PropTypes,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native';
+import Button from 'react-native-button';
 
 function Create (props) {
   return (
     <View style={styles.container}>
       <TextField
         title='What do you want to do?'
-        onChange={function (text) { props.fields.action = text; }}
+        onChange={ (text) => props.fields.action = text }
         defaultValue={props.fields.action}
       />
       <SubmitButton onClick={props.handleClick} />
@@ -40,24 +40,6 @@ function TextField (props) {
         defaultValue={props.defaultValue}
         placeholder={'Create your new habit!'}
         autoFocus={true}
-      />
-    </View>
-  );
-}
-
-// Sub-component of Create
-function Frequency (props) {
-  return (
-    <View style={styles.radio}>
-      <Text style={styles.welcome}>
-        {props.title}
-      </Text>
-      <SegmentedControls
-        onSelection={props.onSelection}
-        selectedOption={props.selectedOption}
-        options={props.options}
-        tint={props.tint}
-        selectedTint={props.selectedTint}
       />
     </View>
   );
@@ -91,18 +73,18 @@ SubmitButton.PropTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 0.90,
     justifyContent: 'center',
     backgroundColor: '#EDBE40',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   radio: {
     width: 325,
     marginTop: 18,
     marginBottom: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   welcome: {
     fontSize: 27,
@@ -110,7 +92,7 @@ var styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 10,
-    color: '#FFFFFF'
+    color: '#FFFFFF',
   },
   textInput: {
     padding:10,
@@ -126,7 +108,7 @@ var styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     color: 'white',
-    fontFamily: 'Avenir'
+    fontFamily: 'Avenir',
   },
   buttonContainer: {
     padding: 10,
@@ -136,7 +118,7 @@ var styles = StyleSheet.create({
     backgroundColor: '#6399DC',
     marginTop: 30,
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
   },
   tips: {
     alignSelf: 'center',
@@ -159,7 +141,4 @@ var styles = StyleSheet.create({
   }
 });
 
-module.exports.Create = Create;
-module.exports.TextField = TextField;
-module.exports.Frequency = Frequency;
-module.exports.SubmitButton = SubmitButton;
+module.exports = { Create };

@@ -1,44 +1,39 @@
-var React = require('react-native');
-var Create = require('../components/Create.js');
-var api = require('../lib/api.js');
-var View = React.View;
-var Text = React.Text;
-var Alert = React.Alert;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
+import React, {
+  View,
+  Text,
+  Alert,
+  Navigator,
+  TouchableOpacity,
+} from 'react-native';
+import api from '../lib/api';
+import { Create } from '../components/Create';
 
-var Create = require('../components/Create').Create;
-
-var AddHabit = React.createClass({
-  getInitialState: function () {
+const AddHabit = React.createClass({
+  getInitialState () {
     return {
       fields: {
         action: null,
-      }
+      },
     }
   },
-  sendHabit: function (reqbody) {
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email, {
+
+  sendHabit (reqbody) {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       },
       body: JSON.stringify(reqbody)
     })
     .then(api.handleErrors)
-    .then(function (response) {
-      return response.json();
-    })
-    .then((function (resJSON) {
-      this.goToInbox(resJSON.badge);
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    .then((response) => response.json())
+    .then((resJSON) => this.goToInbox(resJSON.badge))
+    .catch((err) => console.warn(err));
   },
-  goToInbox: function (badge) {
+
+  goToInbox (badge) {
     if (this.props.onboard === true) {
       this.props.resetToTabs(badge);
     } else {
@@ -49,21 +44,18 @@ var AddHabit = React.createClass({
       }
     }
   },
-  handleClick: function () {
-    // Values stored to be sent to server
-    var action = this.state.fields.action;
 
+  handleClick () {
+    // Values stored to be sent to server
+    const action = this.state.fields.action;
     // Clears input field upon submit
     this.setState({
       fields: {
-        action: null
+        action: null,
       },
     });
-
     if (action !== null) {
-      this.sendHabit({
-        action: action
-      });
+      this.sendHabit({ action });
     } else {
       Alert.alert(
         'Please enter an action',
@@ -73,7 +65,7 @@ var AddHabit = React.createClass({
     }
   },
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
@@ -89,7 +81,7 @@ var AddHabit = React.createClass({
     );
   },
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <Create
         fields={this.state.fields}
@@ -99,41 +91,20 @@ var AddHabit = React.createClass({
   }
 });
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
-    var routeStack = navigator.parentNavigator.state.routeStack;
-    var previousRoute = routeStack[routeStack.length - 2];
-    if (previousRoute.id === 'Habits') {
-      return (
-        <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-            onPress={function () {navigator.parentNavigator.pop()}}>
-          <Text style={{color: 'white', margin: 10}}>
-            Back
-          </Text>
-        </TouchableOpacity>
-        )
-    } else {
-      return null;
-    }
-  },
-
-  RightButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
-    var title;
-    var routeStack = navigator.parentNavigator.state.routeStack;
-    var currentRoute = routeStack[routeStack.length - 1];
-    if (currentRoute.habit) {
-      title = 'Edit Habit';
-    } else {
-      title = 'New Habit';
-    }
+  RightButton (route, navigator, index, navState) {
+    return null;
+  },
+
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-          { title }
+          New Habit
         </Text>
       </TouchableOpacity>
     );

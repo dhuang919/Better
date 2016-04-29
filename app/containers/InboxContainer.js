@@ -23,7 +23,6 @@ var Icon = require('react-native-vector-icons/FontAwesome');
 // custom compoments and methods
 var Notification = require('../components/Notification');
 var Inbox = require('../components/Inbox');
-var Welcome = require('../components/Welcome');
 
 var Habits = React.createClass({
   getInitialState: function () {

@@ -9,7 +9,6 @@ var TouchableOpacity = React.TouchableOpacity;
 var Habits = require('./InboxContainer');
 var Onboard = require('./OnboardContainer');
 var AddHabit = require('./CreateContainer');
-var Welcome = require('../components/Welcome');
 var LoadingContainer = require('./LoadingContainer');
 var HabitDetails = require('../components/HabitDetails');
 var HabitSettings = require('../components/HabitSettings');

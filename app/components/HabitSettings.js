@@ -1,3 +1,4 @@
+'use strict';
 // Temporary fix for suppressing warnings from DatePickerIOS which
 // has an unresolved issue regarding the date being passed to it
 // https://github.com/facebook/react-native/issues/4547
@@ -5,45 +6,45 @@ console.ignoredYellowBox = [
   'Warning: Failed propType',
 ];
 
-var React = require('react-native');
-var api = require('../lib/api');
-var View = React.View;
-var Text = React.Text;
-var Alert = React.AlertIOS;
-var TextInput = React.TextInput;
-var StyleSheet = React.StyleSheet;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
-var DatePickerIOS = React.DatePickerIOS;
-var Switch = React.Switch;
+import React, {
+  View,
+  Text,
+  AlertIOS,
+  TextInput,
+  StyleSheet,
+  Navigator,
+  TouchableOpacity,
+  DatePickerIOS,
+  Switch,
+} from 'react-native';
+import api from '../lib/api';
+import Button from 'react-native-button';
 
-var Button = require('react-native-button');
-
-var HabitSettings = React.createClass({
-  getInitialState: function () {
+const HabitSettings = React.createClass({
+  getInitialState () {
     return {
       habit: this.props.habit,
-      user: this.props.user
+      user: this.props.user,
     };
   },
-  onDateChange: function (date) {
-    var updates = this.state.habit;
+  onDateChange (date) {
+    let updates = this.state.habit;
     updates.reminder.time = date;
     this.setState({ habit: updates });
   },
-  onTextChange: function (text) {
-    var updates = this.state.habit;
+  onTextChange (text) {
+    let updates = this.state.habit;
     updates.action = text;
     this.setState({ habit: updates });
   },
-  onReminderChange: function (bool) {
-    var updates = this.state.habit;
+  onReminderChange (bool) {
+    let updates = this.state.habit;
     updates.reminder.active = bool;
     this.setState({ habit: updates });
+    let user = this.state.user;
 
-    var user = this.state.user;
     if (bool && !user.phoneNumber) {
-      Alert.prompt(
+      AlertIOS.prompt(
         'Update Phone #',
         'We need your phone number to send you SMS reminders!',
         [
@@ -53,32 +54,30 @@ var HabitSettings = React.createClass({
               updates.reminder.active = false;
               this.setState({ habit: updates });
             }).bind(this),
-            style: 'cancel'
+            style: 'cancel',
           },
           {
             text: 'Save',
-            onPress: (function(number) {
+            onPress: (function (number) {
               number = number.replace(/\D/g,'');
               if (number.length === 10) {
-                fetch(process.env.SERVER + '/user/' + user.email, {
+                fetch(`${process.env.SERVER}/user/${user.email}`, {
                   method: 'POST',
                   headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + this.props.token.idToken
+                    'Authorization': `Bearer ${this.props.token.idToken}`
                   },
                   body: JSON.stringify({
-                    phoneNumber: '+1' + number
+                    phoneNumber: `+1${number}`
                   })
                 })
                 .then(api.handleErrors)
-                .catch(function (err) {
-                  console.error(err);
-                });
+                .catch( (err) => console.error(err) );
               } else {
                 updates.reminder.active = false;
                 this.setState({ habit: updates });
-                Alert.alert('Please enter a US number', 'Format: (555) 555-1212. Country code not required.')
+                AlertIOS.alert('Please enter a US number', 'Format: (555) 555-1212. Country code not required.');
               }
             }).bind(this)
           }
@@ -86,54 +85,45 @@ var HabitSettings = React.createClass({
       );
     }
   },
-  gotoInbox: function () {
+  gotoInbox () {
     this.props.navigator.push({ id: 'Habits' });
   },
-  updateHabit: function (habitId) {
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email + '/' + habitId, {
+  updateHabit (habitId) {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       },
       body: JSON.stringify(this.state.habit)
     })
     .then(api.handleErrors)
-    .then(function (res) {
-      return res.json();
-    })
-    .then((function (habit) {
-      this.gotoInbox();
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    .then( (res) => res.json() )
+    .then( (habit) => this.gotoInbox() )
+    .catch( (err) => console.warn(err) );
   },
-  deleteHabit: function (habitId) {
+  deleteHabit (habitId) {
     // TODO: refactor server call to api library
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email + '/' + habitId, {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       }
     })
     .then(api.handleErrors)
-    .then((function () {
-      this.props.navigator.push({ id: 'Habits' });
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    .then( () => this.props.navigator.push({ id: 'Habits' }) )
+    .catch( (err) => console.warn(err) );
   },
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
           renderScene={this.renderScene}
           navigator={this.props.navigator}
           navigationBar={
-            <Navigator.NavigationBar style={{backgroundColor: '#6399DC', alignItems: 'center'}}
+            <Navigator.NavigationBar
+              style={{backgroundColor: '#6399DC', alignItems: 'center'}}
               routeMapper={NavigationBarRouteMapper}
             />
           }
@@ -141,12 +131,12 @@ var HabitSettings = React.createClass({
       </View>
     );
   },
-  toggleDay: function (day) {
-    var updates = this.state.habit;
+  toggleDay (day) {
+    let updates = this.state.habit;
     updates.reminder.days[day] = !updates.reminder.days[day];
     this.setState({ habit: updates });
   },
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     if (this.state.habit.reminder.active) {
       return (
         <View style={styles.container}>
@@ -155,7 +145,7 @@ var HabitSettings = React.createClass({
             defaultValue={this.props.habit.action}
             onChangeText={this.onTextChange}
           />
-          <View style={{ flexDirection: 'row', marginTop: 25 }}>
+          <View style={{flexDirection: 'row', marginTop: 25}}>
             <Text style={{fontSize: 22, fontFamily: 'Avenir'}}>
               SMS Reminder
             </Text>
@@ -177,7 +167,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['sun'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('sun') }).bind(this)}
+              onPress={ () => this.toggleDay('sun') }
             >
               Sun
             </Button>
@@ -185,7 +175,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['mon'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('mon') }).bind(this)}
+              onPress={ () => this.toggleDay('mon') }
             >
               Mon
             </Button>
@@ -193,7 +183,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['tue'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('tue') }).bind(this)}
+              onPress={ () => this.toggleDay('tue') }
             >
               Tue
             </Button>
@@ -201,7 +191,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['wed'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('wed') }).bind(this)}
+              onPress={ () => this.toggleDay('wed') }
             >
               Wed
             </Button>
@@ -209,7 +199,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['thu'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('thu') }).bind(this)}
+              onPress={ () => this.toggleDay('thu') }
             >
               Thu
             </Button>
@@ -217,7 +207,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['fri'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('fri') }).bind(this)}
+              onPress={ () => this.toggleDay('fri') }
             >
               Fri
             </Button>
@@ -225,7 +215,7 @@ var HabitSettings = React.createClass({
               containerStyle={ this.state.habit.reminder.days['sat'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
-              onPress={(function () { this.toggleDay('sat') }).bind(this)}
+              onPress={ () => this.toggleDay('sat') }
             >
               Sat
             </Button>
@@ -234,7 +224,7 @@ var HabitSettings = React.createClass({
             containerStyle={styles.updateButtonContainer}
             style={styles.updateButtonText}
             styleDisabled={{color: 'red'}}
-            onPress={(function () { this.updateHabit(this.state.habit._id); }).bind(this)}
+            onPress={ () => this.updateHabit(this.state.habit._id) }
           >
             Update Habit
           </Button>
@@ -242,7 +232,7 @@ var HabitSettings = React.createClass({
             containerStyle={styles.deleteButtonContainer}
             style={styles.deleteButtonText}
             styleDisabled={{color: 'red'}}
-            onPress={(function () { this.deleteHabit(this.state.habit._id); }).bind(this)}
+            onPress={ () => this.deleteHabit(this.state.habit._id) }
           >
             Delete Habit
           </Button>
@@ -270,7 +260,7 @@ var HabitSettings = React.createClass({
             containerStyle={styles.updateButtonContainer}
             style={styles.updateButtonText}
             styleDisabled={{color: 'red'}}
-            onPress={(function () { this.updateHabit(this.state.habit._id); }).bind(this)}
+            onPress={ () => this.updateHabit(this.state.habit._id) }
           >
             Update Habit
           </Button>
@@ -278,7 +268,7 @@ var HabitSettings = React.createClass({
             containerStyle={styles.deleteButtonContainer}
             style={styles.deleteButtonText}
             styleDisabled={{color: 'red'}}
-            onPress={(function () { this.deleteHabit(this.state.habit._id); }).bind(this)}
+            onPress={ () => this.deleteHabit(this.state.habit._id) }
           >
             Delete
           </Button>
@@ -288,12 +278,12 @@ var HabitSettings = React.createClass({
   }
 });
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity
         style={{flex: 1, justifyContent: 'center'}}
-        onPress={function () { navigator.parentNavigator.pop(); }}>
+        onPress={ () => navigator.parentNavigator.pop() }>
         <Text style={{color: 'white', margin: 10}}>
           Back
         </Text>
@@ -301,11 +291,11 @@ var NavigationBarRouteMapper = {
     );
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 18}}>
@@ -316,7 +306,7 @@ var NavigationBarRouteMapper = {
   }
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,

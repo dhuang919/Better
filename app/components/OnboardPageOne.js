@@ -1,14 +1,23 @@
-var React = require('react-native');
-var Text = React.Text;
-var View = React.View;
-var Navigator = React.Navigator;
-var Component = React.Component;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-var Image = React.Image;
+// var React = require('react-native');
+// var Text = React.Text;
+// var View = React.View;
+// var Navigator = React.Navigator;
+// var Component = React.Component;
+// var StyleSheet = React.StyleSheet;
+// var TouchableOpacity = React.TouchableOpacity;
+// var Image = React.Image;
 
-var OnboardPageOne = React.createClass({
-  render: function () {
+import React, {
+  Text,
+  View,
+  Navigator,
+  StyleSheet,
+  TouchableOpacity,
+  Image
+} from 'react-native';
+
+const OnboardPageOne = React.createClass({
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
@@ -18,7 +27,7 @@ var OnboardPageOne = React.createClass({
     );
   },
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -33,7 +42,7 @@ var OnboardPageOne = React.createClass({
   }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,

@@ -6,7 +6,7 @@ import React, {
   TouchableOpacity,
 } from 'react-native';
 import api from '../lib/api';
-import { Create } from '../components/Create';
+import Create from '../components/Create';
 
 const AddHabit = React.createClass({
   getInitialState () {

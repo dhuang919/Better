@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'left',
-  }
+  },
 });
 
-module.exports = { Create };
+module.exports = Create;

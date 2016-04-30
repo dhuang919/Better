@@ -8,14 +8,14 @@ import React, {
 import Button from 'react-native-button';
 
 const Welcome = React.createClass({
-  onPressButton: function () {
+  onPressButton () {
     this.props.navigator.push({
       id: 'AddHabit',
       onboard: true
     });
   },
 
-  render: function () {
+  render () {
     return (
       <View style={styles.wContainer}>
         <Text style={styles.welcome}>

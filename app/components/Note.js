@@ -1,22 +1,22 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var View = React.View;
-var Text = React.Text;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-var Modal = React.Modal;
-var TextInput = React.TextInput;
-
-// external libraries and components
-var moment = require('moment');
-var Button = require('react-native-button');
-var Icon = require('react-native-vector-icons/FontAwesome');
-
+import React, {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+} from 'react-native';
 // custome components and methods
-var api = require('../lib/api');
+import api from '../lib/api';
+// external libraries and components
+import moment from 'moment';
+import Button from 'react-native-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-var Note = React.createClass({
-  getInitialState: function () {
+const Note = React.createClass({
+  getInitialState () {
     return {
       modalVisible: false,
       instanceId: null,
@@ -26,7 +26,7 @@ var Note = React.createClass({
     };
   },
 
-  componentWillReceiveProps: function (props) {
+  componentWillReceiveProps (props) {
     this.setState({
       modalVisible: props.visible,
       instanceId: props.instanceId,
@@ -36,52 +36,46 @@ var Note = React.createClass({
     });
   },
 
-  updateHabit: function () {
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email + '/' + this.props.habit._id + '/' + this.props.instanceId, {
+  updateHabit () {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${this.props.habit._id}/${this.props.instanceId}`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       },
       body: JSON.stringify(this.state.note)
     })
     .then(api.handleErrors)
-    .then((function (response) {
-      this.props.hideModal();
-    }).bind(this))
-    .then((function () {
-      this.props.getRowData();
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    .then( (response) => this.props.hideModal() )
+    .then( () => this.props.getRowData() )
+    .catch( (err) => console.warn(err) );
   },
 
-  handleUpdate: function () {
+  handleUpdate () {
     this.updateHabit();
   },
 
-  handleClearText: function () {
+  handleClearText () {
     this.setState({
       note: { note: ''},
-    })
+    });
   },
 
-  handleDeleteNote: function () {
+  handleDeleteNote () {
     this.handleClearText();
     this.handleUpdate();
   },
 
-  onTextChange: function (text) {
+  onTextChange (text) {
     this.setState({
       note: { note: text },
     });
   },
 
-  render: function () {
-    var modalBackgroundStyle = {backgroundColor: 'rgba(0, 0, 0, 0.5)'};
-    var innerContainerTransparentStyle = {backgroundColor: '#fff', padding: 20};
+  render () {
+    const modalBackgroundStyle = {backgroundColor: 'rgba(0, 0, 0, 0.5)'};
+    const innerContainerTransparentStyle = {backgroundColor: '#fff', padding: 20};
     return (
       <View>
         <Modal
@@ -119,31 +113,31 @@ var Note = React.createClass({
   }
 });
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-    },
-    innerContainer: {
-      borderRadius: 10,
-      height: 400,
-      alignItems: 'center',
-    },
-    modalButton: {
-      marginHorizontal: 5,
-      padding: 10,
-      borderRadius: 5,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: "#6399DC",
-    },
-    deleteButton: {
-      backgroundColor: "red",
-    },
-    formControls: {
-      flexDirection: 'row',
-    }
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  innerContainer: {
+    borderRadius: 10,
+    height: 400,
+    alignItems: 'center',
+  },
+  modalButton: {
+    marginHorizontal: 5,
+    padding: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#6399DC",
+  },
+  deleteButton: {
+    backgroundColor: "red",
+  },
+  formControls: {
+    flexDirection: 'row',
+  },
 });
 
 module.exports = Note;

@@ -1,26 +1,26 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var View = React.View;
-var Text = React.Text;
-var Image = React.Image;
-var ListView = React.ListView;
-var Navigator = React.Navigator;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-
-// External libraries and components
-var Button = require('react-native-button');
-var ProgressBar = require('react-native-progress-bar');
-
+import React, {
+  View,
+  Text,
+  Image,
+  ListView,
+  Navigator,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 // Custom components and methods
-var api = require('../lib/api');
+import api from '../lib/api';
+// External libraries and components
+import Button from 'react-native-button';
+import ProgressBar from 'react-native-progress-bar';
 
-var Profile = React.createClass({
-  getInitialState: function () {
+const Profile = React.createClass({
+  getInitialState () {
     return {
       dataSource: new ListView.DataSource({
-        rowHasChanged: function (row1, row2) {
-          return row1 !== row2
+        rowHasChanged (row1, row2) {
+          return row1 !== row2;
         }
       }),
       userName: this.props.user.userName,
@@ -33,66 +33,62 @@ var Profile = React.createClass({
       progress: null,
       habits: null,
       badgeURIs: [],
-    }
+    };
   },
   // invoking refreshUserData in both componentDidMount
   // and componentWillReceiveProps ensures user data is
   // current each time the profile page is accessed
-  componentDidMount: function () {
+  componentDidMount () {
     this.refreshUserData();
   },
 
-  componentWillReceiveProps: function () {
+  componentWillReceiveProps () {
     this.refreshUserData();
   },
 
-  refreshUserData: function () {
-    fetch(process.env.SERVER + '/user/' + this.props.user.email, {
+  refreshUserData () {
+    fetch(`${process.env.SERVER}/user/${this.props.user.email}`, {
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       }
     })
     .then(api.handleErrors)
-    .then(function (response) {
-      return response.json();
-    })
+    .then( (response) => response.json() )
     .then(this.parseUserData)
-    .catch(function (err) {
-      console.warn(err);
-    });
+    .catch( (err) => console.warn(err) );
   },
 
-  parseUserData: function (newData) {
+  parseUserData (newData) {
     // user will be set as state in order to
     // populate the avatar portion of the view
-    var user = newData.user;
+    let user = newData.user;
 
     // User's habits are required to determine the best current
     // streak which is used in the progress bar portion of the view
-    var habits = newData.habits;
+    let habits = newData.habits;
 
     // user.badges contains all badges the user has earned and
     // will be iterated through to extract each badge's URI for
     // rendering in the 'Recently Earned Badges' section
-    var badges = user.badges;
-    var badgeURIs = [];
+    let badges = user.badges;
+    let badgeURIs = [];
 
     // earned will determine how many 'streak' badges the user
     // has earned which will help determine what the next badge is
-    var earned = 0;
+    let earned = 0;
 
     // At the moment, only three non-streak badges exist
-    var nonStreakBadges = {
+    const nonStreakBadges = {
       'First Step': true,
       'Better Already': true,
       'Top of the World': true,
     };
 
-    badges.forEach(function (badge, i) {
+    badges.forEach((badge, i) => {
       // Since each object in the badges array consists of a single
       // key-value pair, we can extract the badge name this way
-      var badgeTitle = Object.keys(badge)[0];
+      let badgeTitle = Object.keys(badge)[0];
 
       // Conditional to ensure only the three badges most recent
       // badges are collected and rendered. The way earned badges
@@ -108,7 +104,7 @@ var Profile = React.createClass({
     // calculateProgress returns an object including the user's
     // best current streak, the streak's habit name and the next
     // attainable streak badge
-    var current = this.calculateProgress(earned, habits);
+    let current = this.calculateProgress(earned, habits);
 
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(badgeURIs),
@@ -123,13 +119,13 @@ var Profile = React.createClass({
     });
   },
 
-  calculateProgress: function (earnedStreaks, userHabits) {
-    var goal;
-    var goalName;
+  calculateProgress (earnedStreaks, userHabits) {
+    let goal;
+    let goalName;
 
     // Reduces array of userHabits to an object containing
     // the habit with the longest current streak
-    var progress = userHabits.reduce(function (acc, cur) {
+    let progress = userHabits.reduce((acc, cur) => {
       if (cur.streak.current > acc.count) {
         acc.count = cur.streak.current;
         acc.habit = cur.action;
@@ -139,19 +135,25 @@ var Profile = React.createClass({
 
     // At the moment, the conditionals below are hard coding
     // the next badge name based on the user's current streak count
-    if (earnedStreaks === 3) {
-      goal = 20;
-      goalName = 'Soaring';
-    } else if (earnedStreaks === 2) {
-      goal = 15;
-      goalName = 'On Point';
-    } else if (earnedStreaks === 1) {
-      goal = 10;
-      goalName = 'On a Roll';
-    } else if (earnedStreaks === 0) {
-      goal = 5;
-      goalName = 'Gone Streaking';
+    switch (earnedStreaks) {
+      case 3:
+        goal = 20;
+        goalName = 'Soaring';
+        break;
+      case 2:
+        goal = 15;
+        goalName = 'On Point';
+        break;
+      case 1:
+        goal = 10;
+        goalName = 'On a Roll';
+        break;
+      case 0:
+        goal = 5;
+        goalName = 'Gone Streaking';
+        break;
     }
+
     return {
       progress: progress,
       goal: goal,
@@ -159,7 +161,7 @@ var Profile = React.createClass({
     };
   },
 
-  goToBadges: function () {
+  goToBadges () {
     // earnedBadges is passed to the BadgeView component so
     // earned and unearned badges can be differentiated
     this.props.navigator.push({
@@ -168,7 +170,7 @@ var Profile = React.createClass({
     });
   },
 
-  renderRow: function (badges) {
+  renderRow (badges) {
     return (
       <View>
         <Image
@@ -182,7 +184,7 @@ var Profile = React.createClass({
     );
   },
 
-  render: function () {
+  render () {
     return (
       <Navigator
         renderScene={this.renderScene}
@@ -196,7 +198,7 @@ var Profile = React.createClass({
     );
   },
 
-  renderScene: function () {
+  renderScene () {
     return (
       <View>
         <View style={styles.avatar}>
@@ -259,16 +261,16 @@ var Profile = React.createClass({
   }
 });
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return null;
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 18}}>
@@ -279,7 +281,7 @@ var NavigationBarRouteMapper = {
   }
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
@@ -323,7 +325,6 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 22,
     fontFamily: 'Avenir',
-    // marginBottom: 5,
   },
   userName: {
     textAlign: 'center',
@@ -333,7 +334,7 @@ var styles = StyleSheet.create({
   },
   progressFill: {
     backgroundColor: '#6399DC',
-    height: 15
+    height: 15,
   },
   progress: {
     backgroundColor: '#aaa',
@@ -345,8 +346,7 @@ var styles = StyleSheet.create({
     marginHorizontal: 14,
   },
   streaks: {
-    // marginBottom: 8,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   badgeViewContainer: {
     height: 45,

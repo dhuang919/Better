@@ -1,34 +1,35 @@
-var React = require('react-native');
-var api = require('../lib/api');
-var Text = React.Text;
-var View = React.View;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
-
+'use strict';
+// React Native components
+import React, {
+  Text,
+  View,
+  Navigator,
+  TouchableOpacity,
+} from 'react-native';
 // App components
-var Habits = require('./InboxContainer');
-var Onboard = require('./OnboardContainer');
-var AddHabit = require('./CreateContainer');
-var LoadingContainer = require('./LoadingContainer');
-var HabitDetails = require('../components/HabitDetails');
-var HabitSettings = require('../components/HabitSettings');
-var InstanceHistory = require('../components/InstanceHistory');
+import Habits from './InboxContainer';
+import Onboard from './OnboardContainer';
+import AddHabit from './CreateContainer';
+import LoadingContainer from './LoadingContainer';
+import HabitDetails from '../components/HabitDetails';
+import HabitSettings from '../components/HabitSettings';
+import InstanceHistory from '../components/InstanceHistory';
 
-var AppContainer = React.createClass({
-  getInitialState: function () {
+const AppContainer = React.createClass({
+  getInitialState () {
     return {
       token: this.props.token,
       profile: this.props.profile,
       user: this.props.user,
-      resetToTabs: this.props.resetToTabs
+      resetToTabs: this.props.resetToTabs,
     };
   },
 
-  configureScene: function (route, routeStack) {
+  configureScene (route, routeStack) {
     return Navigator.SceneConfigs.FadeAndroid;
   },
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
@@ -40,79 +41,73 @@ var AppContainer = React.createClass({
     );
   },
 
-  renderScene: function (route, navigator) {
-    var routeId = route.id;
-    if (routeId === 'Loading') {
-      return (
-        <LoadingContainer
-          navigator={navigator}
-          token={this.state.token}
-          profile={this.state.profile}
-          user={this.state.user}
-          badge={this.props.badge}
-        />
-      );
-    }
-    if (routeId === 'Onboard') {
-      return (
-        <Onboard
-          navigator={navigator}
-        />
-      );
-    }
-    if (routeId === 'AddHabit') {
-      return (
-        <AddHabit
-          navigator={navigator}
-          habit={route.habit}
-          token={this.state.token}
-          profile={this.state.profile}
-          onboard={this.props.onboard}
-          resetToTabs={this.state.resetToTabs}
-        />
-      );
-    }
-    if (routeId === 'Habits') {
-      return (
-        <Habits
-          navigator={navigator}
-          token={this.state.token}
-          profile={this.state.profile}
-          route={route}
-        />
-      );
-    }
-    if (routeId === 'HabitSettings') {
-      return (
-        <HabitSettings
-          navigator={navigator}
-          token={this.state.token}
-          profile={this.state.profile}
-          habit={route.habit}
-          user={this.state.user}
-        />
-      );
-    }
-    if (routeId === 'HabitDetails') {
-      return (
-        <HabitDetails
-          navigator={navigator}
-          token={this.state.token}
-          profile={this.state.profile}
-          habit={route.habit}
-        />
-      );
-    }
-    if (routeId === 'InstanceHistory') {
-      return (
-        <InstanceHistory
-          navigator={navigator}
-          token={this.state.token}
-          profile={this.state.profile}
-          habit={route.habit}
-          instances={route.instances}
-        />
-      );
+  renderScene (route, navigator) {
+    switch (route.id) {
+      case 'Loading':
+        return (
+          <LoadingContainer
+            navigator={navigator}
+            token={this.state.token}
+            profile={this.state.profile}
+            user={this.state.user}
+            badge={this.props.badge}
+          />
+        );
+      case 'Onboard':
+        return (
+          <Onboard
+            navigator={navigator}
+          />
+        );
+      case 'AddHabit':
+        return (
+          <AddHabit
+            navigator={navigator}
+            habit={route.habit}
+            token={this.state.token}
+            profile={this.state.profile}
+            onboard={this.props.onboard}
+            resetToTabs={this.state.resetToTabs}
+          />
+        );
+      case 'Habits':
+        return (
+          <Habits
+            navigator={navigator}
+            token={this.state.token}
+            profile={this.state.profile}
+            route={route}
+          />
+        );
+      case 'HabitSettings':
+        return (
+          <HabitSettings
+            navigator={navigator}
+            token={this.state.token}
+            profile={this.state.profile}
+            habit={route.habit}
+            user={this.state.user}
+          />
+        );
+      case 'HabitDetails':
+        return (
+          <HabitDetails
+            navigator={navigator}
+            token={this.state.token}
+            profile={this.state.profile}
+            habit={route.habit}
+          />
+        );
+      case 'InstanceHistory':
+        return (
+          <InstanceHistory
+            navigator={navigator}
+            token={this.state.token}
+            profile={this.state.profile}
+            habit={route.habit}
+            instances={route.instances}
+          />
+        );
     }
   }
 });

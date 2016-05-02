@@ -1,148 +1,139 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var View = React.View;
-var Text = React.Text;
-var Alert = React.Alert;
-var Linking = React.Linking;
-var ListView = React.ListView;
-var Navigator = React.Navigator;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-var Linking = React.Linking;
-var Image = React.Image;
-var Dimensions = React.Dimensions;
+import React, {
+  View,
+  Text,
+  Alert,
+  Linking,
+  ListView,
+  Navigator,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from 'react-native';
+// External libraries and components
+import moment from 'moment';
+import api from '../lib/api';
+import Auth0credentials from '../../auth0_credentials';
+import Icon from 'react-native-vector-icons/FontAwesome';
+// Custom compoments and methods
+import Inbox from '../components/Inbox';
+import Notification from '../components/Notification';
 
-// external libraries and components
-var moment = require('moment');
-var api = require('../lib/api');
-var Auth0credentials = require('../../auth0_credentials');
-var Icon = require('react-native-vector-icons/FontAwesome');
-var moment = require('moment');
-var Icon = require('react-native-vector-icons/FontAwesome');
 
-// custom compoments and methods
-var Notification = require('../components/Notification');
-var Inbox = require('../components/Inbox');
-var Welcome = require('../components/Welcome');
-
-var Habits = React.createClass({
-  getInitialState: function () {
+const Habits = React.createClass({
+  getInitialState () {
     return {
       dataSource: new ListView.DataSource({
-        rowHasChanged: function (row1, row2) {
-          return row1 !== row2
+        rowHasChanged (row1, row2) {
+          return row1 !== row2;
         },
       }),
       scrollEnabled: true,
       alert: false,
       badge: {},
-    }
+    };
   },
 
   // TODO: refactor server call to api library
-  getHabits: function () {
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email, {
+  getHabits () {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
       method: 'GET',
       headers: {
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       },
     })
     .then(api.handleErrors)
-    .then(function (response) {
-      return response.json();
-    })
-    .then((function (responseData) {
+    .then( (response) => response.json() )
+    .then( (responseData) => {
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(responseData)
       });
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    })
+    .catch( (err) => console.warn(err) );
   },
 
-  editHabit: function (habit) {
+  editHabit (habit) {
     this.props.navigator.push({
       id: 'HabitSettings',
       habit: habit,
     });
   },
 
-  showAlert: function (badge) {
-    setTimeout((function () {
+  showAlert (badge) {
+    setTimeout( () => {
       this.setState({
         alert: true,
         badge: badge,
       });
-    }).bind(this), 500);
-    setTimeout((function () {
+    }, 500);
+    setTimeout( () => {
       this.setState({
         alert: false,
       });
-    }).bind(this), 3200);
+    }, 3200);
   },
 
-  toggleInstance: function (habitId) {
+  toggleInstance (habitId) {
     // TODO: refactor server call to api library
     // Ask server to create a new instance of this habit
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email + '/' + habitId, {
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + this.props.token.idToken
+        'Authorization': `Bearer ${this.props.token.idToken}`
       },
     })
     .then(api.handleErrors)
-    .then(function (response) {
-      return response.json();
-    })
-    .then((function (res) {
+    .then( (response) => response.json() )
+    .then( (res) => {
       if (res.badges && res.badges.length) {
         this.showAlert(res.badges[0]);
       }
       this.getHabits();
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
+    })
+    .catch( (err) => console.warn(err) );
   },
 
-  gotoDetails: function (habit) {
+  gotoDetails (habit) {
     this.props.navigator.push({
       id: 'HabitDetails',
       habit: habit,
     });
   },
 
-  componentDidMount: function () {
+  componentDidMount () {
     if (this.props.route.badge) {
       this.showAlert(this.props.route.badge);
     }
     this.getHabits();
   },
 
-  handlePress: function () {
+  handlePress () {
     this.props.navigator.push({ id:'AddHabit' });
   },
 
-  allowScroll: function(scrollEnabled) {
+  allowScroll (scrollEnabled) {
     if (scrollEnabled !== this.state.scrollEnabled) {
       this.setState({ scrollEnabled: scrollEnabled });
     }
   },
 
   // Render each row of the inbox as an Inbox component
-  renderInboxRow: function (habit) {
-    return <Inbox
-      habit={habit}
-      deleteHabit={this.deleteHabit}
-      gotoDetails={this.gotoDetails}
-      editHabit={this.editHabit}
-      toggleInstance={this.toggleInstance}
-      allowScroll={this.allowScroll}
-    />
+  renderInboxRow (habit) {
+    return (
+      <Inbox
+        habit={habit}
+        deleteHabit={this.deleteHabit}
+        gotoDetails={this.gotoDetails}
+        editHabit={this.editHabit}
+        toggleInstance={this.toggleInstance}
+        allowScroll={this.allowScroll}
+      />
+    );
   },
 
-  render: function () {
+  render () {
     return (
       <View style={{flex: 1}}>
         <Navigator
@@ -159,7 +150,7 @@ var Habits = React.createClass({
     );
   },
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <ListView
@@ -182,16 +173,16 @@ var Habits = React.createClass({
   }
 });
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return null;
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 18}}>
@@ -202,7 +193,7 @@ var NavigationBarRouteMapper = {
   }
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 60,

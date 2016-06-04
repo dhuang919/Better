@@ -1,6 +1,7 @@
 # Better
 
-> Get Better.
+> Get Better.  
+![Better demo](https://cloud.githubusercontent.com/assets/13752714/15801337/c9b6feb4-2a5f-11e6-841a-6f8146c7c7a3.gif)
 
 ## Team
 

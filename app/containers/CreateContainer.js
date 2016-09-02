@@ -1,22 +1,30 @@
 'use strict';
+// React Native components
 import React, {
+  Component,
   View,
   Text,
   Alert,
   Navigator,
   TouchableOpacity,
 } from 'react-native';
+// Custom components and methods
 import api from '../lib/api';
 import Create from '../components/Create';
 
-const AddHabit = React.createClass({
-  getInitialState () {
-    return {
+export default class AddHabit extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       fields: {
         action: null,
       },
-    }
-  },
+    };
+    this.sendHabit = this.sendHabit.bind(this);
+    this.goToInbox = this.goToInbox.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+  }
 
   sendHabit (reqbody) {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
@@ -24,15 +32,15 @@ const AddHabit = React.createClass({
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
-      body: JSON.stringify(reqbody)
+      body: JSON.stringify(reqbody),
     })
     .then(api.handleErrors)
-    .then((response) => response.json())
-    .then((resJSON) => this.goToInbox(resJSON.badge))
-    .catch((err) => console.warn(err));
-  },
+    .then( response => response.json() )
+    .then( resJSON => this.goToInbox(resJSON.badge) )
+    .catch( err => console.warn(err) );
+  }
 
   goToInbox (badge) {
     if (this.props.onboard === true) {
@@ -44,7 +52,7 @@ const AddHabit = React.createClass({
         this.props.navigator.push({ id: 'Habits'});
       }
     }
-  },
+  }
 
   handleClick () {
     // Values stored to be sent to server
@@ -64,7 +72,7 @@ const AddHabit = React.createClass({
         [ { text: 'Ok' } ]
       );
     }
-  },
+  }
 
   render () {
     return (
@@ -80,7 +88,7 @@ const AddHabit = React.createClass({
         />
       </View>
     );
-  },
+  }
 
   renderScene (route, navigator) {
     return (
@@ -90,7 +98,7 @@ const AddHabit = React.createClass({
       />
     );
   }
-});
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -111,5 +119,3 @@ const NavigationBarRouteMapper = {
     );
   }
 };
-
-module.exports = AddHabit;

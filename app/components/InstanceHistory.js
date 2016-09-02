@@ -1,14 +1,15 @@
 'use strict';
 // React Native components
 import React, {
-  Component,
   View,
   Text,
-  StyleSheet,
-  Navigator,
-  TouchableOpacity,
-  ListView,
   Image,
+  ListView,
+  PropTypes,
+  Navigator,
+  Component,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 // external libraries and components
 import moment from 'moment';
@@ -51,8 +52,8 @@ export default class InstanceHistory extends Component {
         <View style={styles.row} >
           <Text style={styles.date} >{ moment(rowData.ISOString).format('MMMM Do YYYY') }</Text>
           <Image
-            source={{uri: 'http://better-habits.herokuapp.com/assets/done_green.png'}}
             style={styles.img}
+            source={{uri: 'http://better-habits.herokuapp.com/assets/done_green.png'}}
           />
         </View>
       );
@@ -63,8 +64,8 @@ export default class InstanceHistory extends Component {
           {moment(rowData.ISOString).format('MMMM Do YYYY')}
         </Text>
           <Image
-            source={ {uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'} }
             style={ styles.img }
+            source={ {uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'} }
           />
       </View>
     );
@@ -90,21 +91,29 @@ export default class InstanceHistory extends Component {
     return (
       <View style={styles.container}>
         <ListView
-          dataSource={this.state.dataSource}
           renderRow={this.renderRow}
-          renderHeader={ function () { return (<View><Text style={styles.header}>{this.props.habit.action}</Text></View>)}.bind(this)}
+          dataSource={this.state.dataSource}
+          renderHeader={ () => (<View><Text style={styles.header}>{this.props.habit.action}</Text></View>)}
         />
       </View>
     );
   }
 }
 
+InstanceHistory.PropTypes = {
+  habit: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.func,
+  instances: PropTypes.array,
+};
+
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity
         style={{flex: 1, justifyContent: 'center'}}
-        onPress={function () {navigator.parentNavigator.pop()}}
+        onPress={ () => navigator.parentNavigator.pop() }
       >
         <Text style={{color: 'white', margin: 10}}>
           Back
@@ -161,5 +170,5 @@ const styles = StyleSheet.create({
     height: 26,
     right: 20,
     top: 16,
-  }
+  },
 });

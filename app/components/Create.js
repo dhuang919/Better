@@ -9,7 +9,7 @@ import React, {
 } from 'react-native';
 import Button from 'react-native-button';
 
-export default function Create (props) {
+export function Create (props) {
   return (
     <View style={styles.container}>
       <TextField
@@ -29,7 +29,7 @@ export default function Create (props) {
 }
 
 // Sub-component of Create
-function TextField (props) {
+export function TextField (props) {
   return (
     <View>
       <Text style={styles.welcome}>
@@ -47,7 +47,7 @@ function TextField (props) {
 }
 
 // Sub-component of Create
-function SubmitButton (props) {
+export function SubmitButton (props) {
   return (
     <Button
       containerStyle={styles.buttonContainer}

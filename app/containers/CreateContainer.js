@@ -10,7 +10,7 @@ import React, {
 } from 'react-native';
 // Custom components and methods
 import api from '../lib/api';
-import Create from '../components/Create';
+import { Create } from '../components/Create';
 
 export default class AddHabit extends Component {
   constructor (props) {

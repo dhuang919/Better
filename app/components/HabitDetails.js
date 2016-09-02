@@ -1,34 +1,38 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var View = React.View;
-var Text = React.Text;
-var StyleSheet = React.StyleSheet;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
-var ListView = React.ListView;
-
-// external libraries and components
-var moment = require('moment');
-var Icon = require('react-native-vector-icons/FontAwesome');
-
+import React, {
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  Navigator,
+  TouchableOpacity,
+  ListView,
+} from 'react-native';
 // custom components and methods
-var getPeriodArray = require('../lib/calendar').getPeriodArray;
-var getDaysArray = require('../lib/calendar').getDaysArray;
-var calendarLabel = require('../lib/calendar').calendarLabel;
-var api = require('../lib/api');
-var Note = require('./Note');
+import {
+  getPeriodArray,
+  getDaysArray,
+  calendarLabel
+} from '../lib/calendar';
+import api from '../lib/api';
+import Note from './Note';
+// external libraries and components
+import moment from 'moment';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // global variables
-var _habitInstances;
-var _habit;
+let _habitInstances;
+let _habit;
 
-var HabitDetails = React.createClass({
-  getInitialState: function () {
-    return {
+export default class HabitDetails extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       currentDate: moment(),
       dataSource: new ListView.DataSource({
-        rowHasChanged: function (row1, row2) {
-          return row1 !== row2
+        rowHasChanged (row1, row2) {
+          return row1 !== row2;
         }
       }),
       modalVisible: false,
@@ -36,32 +40,35 @@ var HabitDetails = React.createClass({
       rowData: null,
       instanceId: null,
       date: null,
-      note: { note: '' }
-    }
-  },
+      note: { note: '' },
+    };
+    this.hideModal = this.hideModal.bind(this);
+    this.renderRow = this.renderRow.bind(this);
+    this.getRowData = this.getRowData.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.handleInstancePress = this.handleInstancePress.bind(this);
+  }
 
-  hideModal: function () {
-    this.setState({modalVisible: false});
-  },
+  hideModal () {
+    this.setState({ modalVisible: false });
+  }
 
-  getRowData: function () {
-    var habitId = this.props.habit._id;
-    fetch(process.env.SERVER + '/habits/' + this.props.profile.email + '/' + habitId, {
+  getRowData () {
+    let habitId = this.props.habit._id;
+    fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'GET',
       headers: {
-        'Authorization':'Bearer ' + this.props.token.idToken
-      }
+        'Authorization':`Bearer ${this.props.token.idToken}`,
+      },
     })
     .then(api.handleErrors)
-    .then(function (response) {
-      return response.json();
-    })
-    .then((function (responseData) {
-      var period = getPeriodArray();
-      var days = getDaysArray(period);
-      days.forEach(function(day) {
-        responseData.forEach(function(instance) {
-          if(moment(day.ISOString).isSame(instance.createdAt, 'day')) {
+    .then( response => response.json() )
+    .then( responseData => {
+      let period = getPeriodArray();
+      let days = getDaysArray(period);
+      days.forEach( day => {
+        responseData.forEach( instance => {
+          if (moment(day.ISOString).isSame(instance.createdAt, 'day')) {
             day.instanceId = instance._id;
             day.note = { note: instance.note };
             day.done = true;
@@ -71,31 +78,29 @@ var HabitDetails = React.createClass({
       days = calendarLabel().concat(days);
       this.setState({
         instances: responseData,
-        dataSource: this.state.dataSource.cloneWithRows(days)
+        dataSource: this.state.dataSource.cloneWithRows(days),
       });
       _habitInstances = responseData;
       _habit = this.props.habit;
-    }).bind(this))
-    .catch(function (err) {
-      console.warn(err);
-    });
-  },
+    })
+    .catch( err => console.warn(err) );
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     this.getRowData();
-  },
+  }
 
-  handleInstancePress: function (rowData) {
+  handleInstancePress (rowData) {
     this.setState({
       modalVisible: true,
       rowData: rowData,
       instanceId: rowData.instanceId,
       date: rowData.ISOString,
-      note: rowData.note
+      note: rowData.note,
     });
-  },
+  }
 
-  renderRow: function (rowData, sectionID, rowID) {
+  renderRow (rowData, sectionID, rowID) {
     // Renders DAYS OF WEEK in the calendar
     if (rowData.calendarHeading) {
       return (
@@ -112,7 +117,7 @@ var HabitDetails = React.createClass({
     if (moment(rowData.ISOString).isSame(this.state.currentDate, 'day') && rowData.done && rowData.note.note) {
       return (
         <TouchableOpacity
-          onPress={function () {this.handleInstancePress(rowData)}.bind(this)}
+          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
         >
           <View style={styles.presentDoneRow}>
@@ -128,7 +133,7 @@ var HabitDetails = React.createClass({
     if (moment(rowData.ISOString).isSame(this.state.currentDate, 'day') && rowData.done) {
       return (
         <TouchableOpacity
-          onPress={function () {this.handleInstancePress(rowData)}.bind(this)}
+          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
         >
           <View style={styles.presentDoneRow}>
@@ -155,7 +160,7 @@ var HabitDetails = React.createClass({
     if (rowData.done && rowData.note.note) {
       return (
         <TouchableOpacity
-          onPress={function () {this.handleInstancePress(rowData)}.bind(this)}
+          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
         >
           <View style={styles.doneRow}>
@@ -171,7 +176,7 @@ var HabitDetails = React.createClass({
     if (rowData.done) {
       return (
         <TouchableOpacity
-          onPress={function () {this.handleInstancePress(rowData)}.bind(this)}
+          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
         >
           <View style={styles.doneRow}>
@@ -204,9 +209,9 @@ var HabitDetails = React.createClass({
         </View>
       </TouchableOpacity>
     );
-  },
+  }
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
@@ -220,9 +225,9 @@ var HabitDetails = React.createClass({
         />
       </View>
     );
-  },
+  }
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <Text style={styles.heading} onPress={this.onPress}>{ this.props.habit.action }</Text>
@@ -262,13 +267,13 @@ var HabitDetails = React.createClass({
       </View>
     );
   }
-});
+}
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-          onPress={function () {navigator.parentNavigator.pop()}}>
+          onPress={ () => navigator.parentNavigator.pop() }>
         <Text style={{color: 'white', margin: 10}}>
           Back
         </Text>
@@ -276,10 +281,10 @@ var NavigationBarRouteMapper = {
     );
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-        onPress={function () {navigator.parentNavigator.push({id: 'InstanceHistory', instances: _habitInstances, habit: _habit})}}
+        onPress={ () => navigator.parentNavigator.push({id: 'InstanceHistory', instances: _habitInstances, habit: _habit}) }
       >
         <Text style={{color: 'white', margin: 10}}>
           History
@@ -299,11 +304,11 @@ var NavigationBarRouteMapper = {
   }
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 0.90,
     paddingHorizontal: 5,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   heading: {
     top: 80,
@@ -315,7 +320,7 @@ var styles = StyleSheet.create({
     top: 90,
     justifyContent: 'space-around',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   calendarHeading: {
     fontFamily: 'Avenir',
@@ -330,7 +335,7 @@ var styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: '#fff',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   doneRow: {
     justifyContent: 'center',
@@ -342,7 +347,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#CCC'
+    borderColor: '#CCC',
   },
   futureRow: {
     justifyContent: 'center',
@@ -354,7 +359,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#CCC'
+    borderColor: '#CCC',
   },
   presentDoneRow: {
     justifyContent: 'center',
@@ -366,7 +371,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderRadius: 5,
-    borderColor: '#000000'
+    borderColor: '#000000',
   },
   presentNotDoneRow: {
     justifyContent: 'center',
@@ -378,7 +383,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderRadius: 5,
-    borderColor: '#000000'
+    borderColor: '#000000',
   },
   unavailRow: {
     justifyContent: 'center',
@@ -390,7 +395,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#CCC'
+    borderColor: '#CCC',
   },
   count: {
     alignItems: 'center',
@@ -406,8 +411,6 @@ var styles = StyleSheet.create({
     padding: 3,
     marginTop: 5,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   }
 });
-
-module.exports = HabitDetails;

@@ -34,12 +34,12 @@ class TabContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      selectedTab: 'inbox',
-      auth: false,
-      profile: null,
-      token: null,
       user: null,
+      auth: false,
+      token: null,
       onboard: null,
+      profile: null,
+      selectedTab: 'inbox',
     };
     this.showLock = this.showLock.bind(this);
     this.resetToTabs = this.resetToTabs.bind(this);
@@ -48,11 +48,11 @@ class TabContainer extends Component {
 
   handleLogout () {
     this.setState({
+      user: null,
       auth: false,
       token: null,
-      profile: null,
-      user: null,
       onboard: null,
+      profile: null,
     });
     this.showLock();
   }
@@ -81,11 +81,11 @@ class TabContainer extends Component {
         // Set user info on state
         let onboardState = user.newUser;
         this.setState({
-          selectedTab: 'inbox',
+          user: user,
           auth: true,
           token: token,
           profile: profile,
-          user: user,
+          selectedTab: 'inbox',
           onboard: onboardState,
         });
       })
@@ -106,9 +106,9 @@ class TabContainer extends Component {
       .then( response => response.json() )
       .then(response => {
         this.setState({
-          user: response.user,
-          onboard: false,
           badge: badge,
+          onboard: false,
+          user: response.user,
         });
       })
       .catch( err => console.warn(err) );

@@ -3,8 +3,9 @@
 import React, {
   View,
   Text,
-  StyleSheet,
   Image,
+  PropTypes,
+  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 // external libraries and components
@@ -50,6 +51,14 @@ export default function Inbox (props) {
     </View>
   );
 }
+
+Inbox.PropTypes = {
+  habit: PropTypes.object,
+  editHabit: PropTypes.func,
+  allowScroll: PropTypes.func,
+  gotoDetails: PropTypes.func,
+  toggleInstance: PropTypes.func,
+};
 
 const styles = StyleSheet.create({
   habitText: {

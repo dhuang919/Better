@@ -304,7 +304,7 @@ HabitSettings.PropTypes = {
   habit: PropTypes.object,
   token: PropTypes.object,
   profile: PropTypes.object,
-  navigator: PropTypes.func,
+  navigator: PropTypes.object,
 };
 
 const NavigationBarRouteMapper = {

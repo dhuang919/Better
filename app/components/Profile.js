@@ -274,7 +274,7 @@ Profile.PropTypes = {
   user: PropTypes.object,
   token: PropTypes.object,
   profile: PropTypes.object,
-  navigator: PropTypes.func,
+  navigator: PropTypes.object,
   handleLogout: PropTypes.func,
 };
 

@@ -6,6 +6,7 @@ import React, {
   Text,
   Alert,
   Navigator,
+  PropTypes,
   TouchableOpacity,
 } from 'react-native';
 // Custom components and methods
@@ -98,6 +99,14 @@ export default class AddHabit extends Component {
       />
     );
   }
+}
+
+AddHabit.PropTypes = {
+  token: PropTypes.object,
+  onboard: PropTypes.bool,
+  profile: PropTypes.object,
+  navigator: PropTypes.object,
+  resetToTabs: PropTypes.func,
 };
 
 const NavigationBarRouteMapper = {

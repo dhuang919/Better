@@ -128,7 +128,6 @@ const NavigationBarRouteMapper = {
   }
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 0.90,

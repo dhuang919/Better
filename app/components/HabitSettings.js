@@ -7,6 +7,7 @@ console.ignoredYellowBox = [
 ];
 
 import React, {
+  Component,
   View,
   Text,
   AlertIOS,
@@ -20,23 +21,32 @@ import React, {
 import api from '../lib/api';
 import Button from 'react-native-button';
 
-const HabitSettings = React.createClass({
-  getInitialState () {
-    return {
-      habit: this.props.habit,
-      user: this.props.user,
+export default class HabitSettings extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      habit: props.habit,
+      user: props.user,
     };
-  },
+    this.toggleDay = this.toggleDay.bind(this);
+    this.gotoInbox = this.gotoInbox.bind(this);
+    this.updateHabit = this.updateHabit.bind(this);
+    this.deleteHabit = this.deleteHabit.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.onDateChange = this.onDateChange.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
+    this.onReminderChange = this.onReminderChange.bind(this);
+  }
   onDateChange (date) {
     let updates = this.state.habit;
     updates.reminder.time = date;
     this.setState({ habit: updates });
-  },
+  }
   onTextChange (text) {
     let updates = this.state.habit;
     updates.action = text;
     this.setState({ habit: updates });
-  },
+  }
   onReminderChange (bool) {
     let updates = this.state.habit;
     updates.reminder.active = bool;
@@ -84,10 +94,10 @@ const HabitSettings = React.createClass({
         ]
       );
     }
-  },
+  }
   gotoInbox () {
     this.props.navigator.push({ id: 'Habits' });
-  },
+  }
   updateHabit (habitId) {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'PUT',
@@ -102,7 +112,7 @@ const HabitSettings = React.createClass({
     .then( (res) => res.json() )
     .then( (habit) => this.gotoInbox() )
     .catch( (err) => console.warn(err) );
-  },
+  }
   deleteHabit (habitId) {
     // TODO: refactor server call to api library
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
@@ -114,7 +124,7 @@ const HabitSettings = React.createClass({
     .then(api.handleErrors)
     .then( () => this.props.navigator.push({ id: 'Habits' }) )
     .catch( (err) => console.warn(err) );
-  },
+  }
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -130,12 +140,12 @@ const HabitSettings = React.createClass({
         />
       </View>
     );
-  },
+  }
   toggleDay (day) {
     let updates = this.state.habit;
     updates.reminder.days[day] = !updates.reminder.days[day];
     this.setState({ habit: updates });
-  },
+  }
   renderScene (route, navigator) {
     if (this.state.habit.reminder.active) {
       return (
@@ -276,7 +286,7 @@ const HabitSettings = React.createClass({
       );
     }
   }
-});
+}
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -378,5 +388,3 @@ const styles = StyleSheet.create({
     color: '#adadad'
   }
 });
-
-module.exports = HabitSettings;

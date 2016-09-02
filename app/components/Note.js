@@ -1,6 +1,7 @@
 'use strict';
 // React Native components
 import React, {
+  Component,
   View,
   Text,
   StyleSheet,
@@ -15,16 +16,22 @@ import moment from 'moment';
 import Button from 'react-native-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Note = React.createClass({
-  getInitialState () {
-    return {
+export default class Note extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       modalVisible: false,
       instanceId: null,
       rowData: null,
       date: null,
       note: { note: '' },
     };
-  },
+    this.updateHabit = this.updateHabit.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.onTextChange = this.onTextChange.bind(this);
+    this.handleClearText = this.handleClearText.bind(this);
+    this.handleDeleteNote = this.handleDeleteNote.bind(this);
+  }
 
   componentWillReceiveProps (props) {
     this.setState({
@@ -34,7 +41,7 @@ const Note = React.createClass({
       date: props.date,
       note: props.note,
     });
-  },
+  }
 
   updateHabit () {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${this.props.habit._id}/${this.props.instanceId}`, {
@@ -50,28 +57,28 @@ const Note = React.createClass({
     .then( (response) => this.props.hideModal() )
     .then( () => this.props.getRowData() )
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   handleUpdate () {
     this.updateHabit();
-  },
+  }
 
   handleClearText () {
     this.setState({
       note: { note: ''},
     });
-  },
+  }
 
   handleDeleteNote () {
     this.handleClearText();
     this.handleUpdate();
-  },
+  }
 
   onTextChange (text) {
     this.setState({
       note: { note: text },
     });
-  },
+  }
 
   render () {
     const modalBackgroundStyle = {backgroundColor: 'rgba(0, 0, 0, 0.5)'};
@@ -111,7 +118,7 @@ const Note = React.createClass({
       </View>
     );
   }
-});
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -139,5 +146,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-
-module.exports = Note;
+// module.exports = Note;

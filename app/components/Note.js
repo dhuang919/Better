@@ -1,13 +1,14 @@
 'use strict';
 // React Native components
 import React, {
-  Component,
   View,
   Text,
-  StyleSheet,
-  TouchableOpacity,
   Modal,
   TextInput,
+  Component,
+  PropTypes,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 // custome components and methods
 import api from '../lib/api';
@@ -20,11 +21,11 @@ export default class Note extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      modalVisible: false,
-      instanceId: null,
-      rowData: null,
       date: null,
+      rowData: null,
+      instanceId: null,
       note: { note: '' },
+      modalVisible: false,
     };
     this.updateHabit = this.updateHabit.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
@@ -35,11 +36,11 @@ export default class Note extends Component {
 
   componentWillReceiveProps (props) {
     this.setState({
+      note: props.note,
+      date: props.date,
+      rowData: props.rowData,
       modalVisible: props.visible,
       instanceId: props.instanceId,
-      rowData: props.rowData,
-      date: props.date,
-      note: props.note,
     });
   }
 
@@ -64,20 +65,16 @@ export default class Note extends Component {
   }
 
   handleClearText () {
-    this.setState({
-      note: { note: ''},
-    });
+    this.setState({ note: { note: ''} });
   }
 
   handleDeleteNote () {
-    this.handleClearText();
     this.handleUpdate();
+    this.handleClearText();
   }
 
   onTextChange (text) {
-    this.setState({
-      note: { note: text },
-    });
+    this.setState({ note: { note: text } });
   }
 
   render () {
@@ -93,23 +90,44 @@ export default class Note extends Component {
             <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
               <Text style={{fontSize: 15, marginBottom: 20}}>{moment(this.props.date).format('MMMM Do YYYY')}</Text>
               <TextInput
-                style={{height: 250, width: 300, fontSize: 18, borderColor: 'white', borderWidth: 1}}
-                defaultValue={this.state.note.note}
+                maxLength={200}
+                multiline={true}
                 autoFocus={true}
                 placeholder="Write a note.."
                 onChangeText={this.onTextChange}
-                multiline={true}
-                maxLength={200}
+                defaultValue={this.state.note.note}
+                style={{height: 250, width: 300, fontSize: 18, borderColor: 'white', borderWidth: 1}}
               />
               <View style={styles.formControls}>
-                <TouchableOpacity style={styles.modalButton} onPress={this.handleUpdate}>
-                  <Icon name='save' size={25} color='#ffffff' />
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={this.handleUpdate}
+                >
+                  <Icon
+                    size={25}
+                    name='save'
+                    color='#ffffff'
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.modalButton} onPress={this.handleClearText}>
-                  <Icon name='times-circle-o' size={25} color='#ffffff' />
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={this.handleClearText}
+                >
+                  <Icon
+                    size={25}
+                    color='#ffffff'
+                    name='times-circle-o'
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.modalButton, styles.deleteButton]} onPress={this.handleDeleteNote}>
-                  <Icon name='trash-o' size={25} color='#ffffff' />
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.deleteButton]}
+                  onPress={this.handleDeleteNote}
+                >
+                  <Icon
+                    size={25}
+                    name='trash-o'
+                    color='#ffffff'
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -119,6 +137,19 @@ export default class Note extends Component {
     );
   }
 }
+
+Note.PropTypes = {
+  note: PropTypes.object,
+  date: PropTypes.string,
+  habit: PropTypes.object,
+  token: PropTypes.object,
+  visible: PropTypes.bool,
+  profile: PropTypes.object,
+  rowData: PropTypes.object,
+  hideModal: PropTypes.func,
+  getRowData: PropTypes.func,
+  instanceId: PropTypes.string,
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,7 @@
 'use strict';
 // React Native components
 import React, {
+  Component,
   View,
   Text,
   Alert,
@@ -21,10 +22,22 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Inbox from '../components/Inbox';
 import Notification from '../components/Notification';
 
-
-const Habits = React.createClass({
-  getInitialState () {
-    return {
+export default class Habits extends Component {
+  // getInitialState () {
+  //   return {
+  //     dataSource: new ListView.DataSource({
+  //       rowHasChanged (row1, row2) {
+  //         return row1 !== row2;
+  //       },
+  //     }),
+  //     scrollEnabled: true,
+  //     alert: false,
+  //     badge: {},
+  //   };
+  // }
+  constructor (props) {
+    super(props);
+    this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
@@ -34,8 +47,16 @@ const Habits = React.createClass({
       alert: false,
       badge: {},
     };
-  },
-
+    this.getHabits = this.getHabits.bind(this);
+    this.editHabit = this.editHabit.bind(this);
+    this.showAlert = this.showAlert.bind(this);
+    this.gotoDetails = this.gotoDetails.bind(this);
+    this.handlePress = this.handlePress.bind(this);
+    this.allowScroll = this.allowScroll.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.renderInboxRow = this.renderInboxRow.bind(this);
+    this.toggleInstance = this.toggleInstance.bind(this);
+  }
   // TODO: refactor server call to api library
   getHabits () {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
@@ -52,14 +73,14 @@ const Habits = React.createClass({
       });
     })
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   editHabit (habit) {
     this.props.navigator.push({
       id: 'HabitSettings',
       habit: habit,
     });
-  },
+  }
 
   showAlert (badge) {
     setTimeout( () => {
@@ -73,7 +94,7 @@ const Habits = React.createClass({
         alert: false,
       });
     }, 3200);
-  },
+  }
 
   toggleInstance (habitId) {
     // TODO: refactor server call to api library
@@ -93,31 +114,31 @@ const Habits = React.createClass({
       this.getHabits();
     })
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   gotoDetails (habit) {
     this.props.navigator.push({
       id: 'HabitDetails',
       habit: habit,
     });
-  },
+  }
 
   componentDidMount () {
     if (this.props.route.badge) {
       this.showAlert(this.props.route.badge);
     }
     this.getHabits();
-  },
+  }
 
   handlePress () {
     this.props.navigator.push({ id:'AddHabit' });
-  },
+  }
 
   allowScroll (scrollEnabled) {
     if (scrollEnabled !== this.state.scrollEnabled) {
       this.setState({ scrollEnabled: scrollEnabled });
     }
-  },
+  }
 
   // Render each row of the inbox as an Inbox component
   renderInboxRow (habit) {
@@ -131,7 +152,7 @@ const Habits = React.createClass({
         allowScroll={this.allowScroll}
       />
     );
-  },
+  }
 
   render () {
     return (
@@ -148,7 +169,7 @@ const Habits = React.createClass({
         />
       </View>
     );
-  },
+  }
 
   renderScene (route, navigator) {
     return (
@@ -171,7 +192,7 @@ const Habits = React.createClass({
       </View>
     );
   }
-});
+}
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -218,5 +239,3 @@ const styles = StyleSheet.create({
     },
   },
 });
-
-module.exports = Habits;

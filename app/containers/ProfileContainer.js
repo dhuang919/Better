@@ -1,59 +1,66 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var View = React.View;
-var Text = React.Text;
-var Navigator = React.Navigator;
-var StyleSheet = React.StyleSheet;
-var TouchableOpacity = React.TouchableOpacity;
-
+import React, {
+  Component,
+  View,
+  Text,
+  Navigator,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 // Custom components and methods
-var api = require('../lib/api');
-var Profile = require('../components/Profile');
-var BadgeView = require('../components/BadgeView');
+import api from '../lib/api';
+import Profile from '../components/Profile';
+import BadgeView from '../components/BadgeView';
 
-var ProfileContainer = React.createClass({
-  configureScene: function (route, routeStack) {
+export default class ProfileContainer extends Component {
+  constructor (props) {
+    super(props);
+    this.renderScene = this.renderScene.bind(this);
+    this.configureScene = this.configureScene.bind(this);
+  }
+
+  configureScene (route, routeStack) {
     return Navigator.SceneConfigs.FadeAndroid;
-  },
+  }
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
           configureScene={this.configureScene}
-          initialRoute = {{id: 'Profile'}}
-          renderScene = {this.renderScene}
+          initialRoute={{id: 'Profile'}}
+          renderScene={this.renderScene}
         />
       </View>
     );
-  },
+  }
 
-  renderScene: function (route, navigator) {
-    var routeId = route.id;
-    if (routeId === 'Profile') {
-      return (
-        <Profile
+  renderScene (route, navigator) {
+    switch (route.id) {
+      case 'Profile':
+        return (
+          <Profile
           navigator={navigator}
           handleLogout={this.props.handleLogout}
           profile={this.props.profile}
           user={this.props.user}
           token={this.props.token}
           badgeURIs={this.props.badgeURIs}
-        />
-      );
-    }
-    if (routeId == 'Badges') {
-      return (
-        <BadgeView
+          />
+        );
+      case 'Badges':
+        return (
+          <BadgeView
           navigator={navigator}
           earnedBadges={route.earnedBadges}
-        />
-      );
+          />
+        );
     }
   }
-});
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 54,
@@ -62,5 +69,3 @@ var styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
 });
-
-module.exports = ProfileContainer;

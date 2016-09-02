@@ -31,10 +31,10 @@ export class Welcome extends Component {
           Create your first habit!
         </Text>
         <Button
-          containerStyle={styles.buttonContainer}
           style={styles.buttonText}
-          styleDisabled={{color: 'red'}}
           onPress={this.onPressButton}
+          styleDisabled={{color: 'red'}}
+          containerStyle={styles.buttonContainer}
         >
           Get Started
         </Button>
@@ -136,5 +136,3 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
 });
-
-// module.exports = { Welcome, PageOne, PageTwo };

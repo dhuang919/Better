@@ -46,7 +46,7 @@ From the ios directory:
 pod install
 ```
 
-Once all dependencies are finished installing, set the `localServer` flag on line 17 in `index.ios.js` to `true`. This enables development on http://localhost:3000. Then enter:
+Once all dependencies are finished installing, set the `localServer` flag on line 22 in `index.ios.js` to `true`. This enables development on http://localhost:3000. Then enter:
 
 ```sh
 mongod

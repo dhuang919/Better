@@ -1,6 +1,7 @@
 'use strict';
 // React Native components
 import React, {
+  Component,
   View,
   Text,
   Image,
@@ -15,9 +16,29 @@ import api from '../lib/api';
 import Button from 'react-native-button';
 import ProgressBar from 'react-native-progress-bar';
 
-const Profile = React.createClass({
-  getInitialState () {
-    return {
+export default class Profile extends Component {
+  // getInitialState () {
+  //   return {
+  //     dataSource: new ListView.DataSource({
+  //       rowHasChanged (row1, row2) {
+  //         return row1 !== row2;
+  //       }
+  //     }),
+  //     userName: this.props.user.userName,
+  //     photo: this.props.profile.picture,
+  //     user: this.props.user,
+  //     currentStreakCount: null,
+  //     currentStreakHabit: null,
+  //     nextGoalCount: null,
+  //     nextGoalName: null,
+  //     progress: null,
+  //     habits: null,
+  //     badgeURIs: [],
+  //   };
+  // }
+  constructor (props) {
+    super(props);
+    this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
@@ -34,17 +55,23 @@ const Profile = React.createClass({
       habits: null,
       badgeURIs: [],
     };
-  },
+    this.renderRow = this.renderRow.bind(this);
+    this.goToBadges = this.goToBadges.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.parseUserData = this.parseUserData.bind(this);
+    this.refreshUserData = this.refreshUserData.bind(this);
+    this.calculateProgress = this.calculateProgress.bind(this);
+  }
   // invoking refreshUserData in both componentDidMount
   // and componentWillReceiveProps ensures user data is
   // current each time the profile page is accessed
   componentDidMount () {
     this.refreshUserData();
-  },
+  }
 
   componentWillReceiveProps () {
     this.refreshUserData();
-  },
+  }
 
   refreshUserData () {
     fetch(`${process.env.SERVER}/user/${this.props.user.email}`, {
@@ -57,7 +84,7 @@ const Profile = React.createClass({
     .then( (response) => response.json() )
     .then(this.parseUserData)
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   parseUserData (newData) {
     // user will be set as state in order to
@@ -117,7 +144,7 @@ const Profile = React.createClass({
       habits: habits,
       badgeURIs: badgeURIs,
     });
-  },
+  }
 
   calculateProgress (earnedStreaks, userHabits) {
     let goal;
@@ -159,7 +186,7 @@ const Profile = React.createClass({
       goal: goal,
       goalName: goalName,
     };
-  },
+  }
 
   goToBadges () {
     // earnedBadges is passed to the BadgeView component so
@@ -168,7 +195,7 @@ const Profile = React.createClass({
       id: 'Badges',
       earnedBadges: this.state.user.badges,
     });
-  },
+  }
 
   renderRow (badges) {
     return (
@@ -182,7 +209,7 @@ const Profile = React.createClass({
         </Text>
       </View>
     );
-  },
+  }
 
   render () {
     return (
@@ -196,7 +223,7 @@ const Profile = React.createClass({
         }
       />
     );
-  },
+  }
 
   renderScene () {
     return (
@@ -259,7 +286,7 @@ const Profile = React.createClass({
       </View>
     );
   }
-});
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -378,5 +405,3 @@ const styles = StyleSheet.create({
     color: '#e14f3f',
   },
 });
-
-module.exports = Profile;

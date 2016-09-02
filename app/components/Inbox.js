@@ -1,36 +1,37 @@
+'use strict';
 // React Native component
-var React = require('react-native');
-var Text = React.Text;
-var View = React.View;
-var StyleSheet = React.StyleSheet;
-var Image = React.Image;
-var TouchableOpacity = React.TouchableOpacity;
-
+import React, {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 // external libraries and components
-var Swipeout = require('react-native-swipeout');
-var moment = require('moment');
-var Icon = require('react-native-vector-icons/FontAwesome');
+import moment from 'moment';
+import Swipeout from 'react-native-swipeout';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-function Inbox (props) {
-  var swipeButtons = [{
-    text: 'Settings',
-    color: '#000000',
-    backgroundColor: "#eee",
-    onPress: function () { props.editHabit(props.habit) },
-  },];
-  var done = props.habit.lastDone && moment().isSame(props.habit.lastDone, 'day');
+export default function Inbox (props) {
+  let swipeButtons = [
+    {
+      text: 'Settings',
+      color: '#000000',
+      backgroundColor: "#eee",
+      onPress () { props.editHabit(props.habit) },
+    },
+  ];
+  let done = props.habit.lastDone && moment().isSame(props.habit.lastDone, 'day');
   return (
     <View style={styles.swipeContainer}>
       <Swipeout
         autoClose={true}
         right={swipeButtons}
         backgroundColor='transparent'
-        scroll={function (event) {
-          props.allowScroll(event)
-        }}
+        scroll={event => props.allowScroll(event)}
       >
         <View style={styles.swipeContent}>
-          <TouchableOpacity onPress={function () { props.gotoDetails(props.habit) }}>
+          <TouchableOpacity onPress={() => props.gotoDetails(props.habit)}>
             <View>
               <Text style={styles.habitText}>
                 {props.habit.action}
@@ -38,7 +39,7 @@ function Inbox (props) {
             </View>
           </TouchableOpacity>
           <View style={{flex: 1}}></View>
-          <TouchableOpacity onPress={function () { props.toggleInstance(props.habit._id) }}>
+          <TouchableOpacity onPress={() => props.toggleInstance(props.habit._id)}>
             <Image
               source={done ? {uri: 'http://better-habits.herokuapp.com/assets/done_green.png'} : {uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'}}
               style={styles.img}
@@ -48,9 +49,9 @@ function Inbox (props) {
       </Swipeout>
     </View>
   );
-};
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   habitText: {
     fontFamily: 'Avenir',
     fontSize: 20,
@@ -81,5 +82,3 @@ var styles = StyleSheet.create({
     height: 30,
   },
 });
-
-module.exports = Inbox;

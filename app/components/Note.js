@@ -146,4 +146,3 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
 });
-// module.exports = Note;

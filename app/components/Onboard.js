@@ -1,5 +1,6 @@
 'use strict';
 import React, {
+  Component,
   Text,
   View,
   StyleSheet,
@@ -7,13 +8,18 @@ import React, {
 } from 'react-native';
 import Button from 'react-native-button';
 
-const Welcome = React.createClass({
+export class Welcome extends Component {
+  constructor (props) {
+    super(props);
+    this.onPressButton = this.onPressButton.bind(this);
+  }
+
   onPressButton () {
     this.props.navigator.push({
       id: 'AddHabit',
-      onboard: true
+      onboard: true,
     });
-  },
+  }
 
   render () {
     return (
@@ -35,9 +41,9 @@ const Welcome = React.createClass({
       </View>
     );
   }
-});
+};
 
-function PageOne (props) {
+export function PageOne (props) {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
@@ -51,7 +57,7 @@ function PageOne (props) {
   );
 }
 
-function PageTwo (props) {
+export function PageTwo (props) {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>
@@ -131,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = { Welcome, PageOne, PageTwo };
+// module.exports = { Welcome, PageOne, PageTwo };

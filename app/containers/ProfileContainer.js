@@ -41,19 +41,19 @@ export default class ProfileContainer extends Component {
       case 'Profile':
         return (
           <Profile
-          navigator={navigator}
-          handleLogout={this.props.handleLogout}
-          profile={this.props.profile}
-          user={this.props.user}
-          token={this.props.token}
-          badgeURIs={this.props.badgeURIs}
+            navigator={navigator}
+            user={this.props.user}
+            token={this.props.token}
+            profile={this.props.profile}
+            badgeURIs={this.props.badgeURIs}
+            handleLogout={this.props.handleLogout}
           />
         );
       case 'Badges':
         return (
           <BadgeView
-          navigator={navigator}
-          earnedBadges={route.earnedBadges}
+            navigator={navigator}
+            earnedBadges={route.earnedBadges}
           />
         );
     }

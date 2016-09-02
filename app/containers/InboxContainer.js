@@ -23,18 +23,6 @@ import Inbox from '../components/Inbox';
 import Notification from '../components/Notification';
 
 export default class Habits extends Component {
-  // getInitialState () {
-  //   return {
-  //     dataSource: new ListView.DataSource({
-  //       rowHasChanged (row1, row2) {
-  //         return row1 !== row2;
-  //       },
-  //     }),
-  //     scrollEnabled: true,
-  //     alert: false,
-  //     badge: {},
-  //   };
-  // }
   constructor (props) {
     super(props);
     this.state = {

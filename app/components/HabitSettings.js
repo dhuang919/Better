@@ -37,16 +37,19 @@ export default class HabitSettings extends Component {
     this.onTextChange = this.onTextChange.bind(this);
     this.onReminderChange = this.onReminderChange.bind(this);
   }
+
   onDateChange (date) {
     let updates = this.state.habit;
     updates.reminder.time = date;
     this.setState({ habit: updates });
   }
+
   onTextChange (text) {
     let updates = this.state.habit;
     updates.action = text;
     this.setState({ habit: updates });
   }
+
   onReminderChange (bool) {
     let updates = this.state.habit;
     updates.reminder.active = bool;
@@ -95,36 +98,46 @@ export default class HabitSettings extends Component {
       );
     }
   }
+
   gotoInbox () {
     this.props.navigator.push({ id: 'Habits' });
   }
+
   updateHabit (habitId) {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
-      body: JSON.stringify(this.state.habit)
+      body: JSON.stringify(this.state.habit),
     })
     .then(api.handleErrors)
-    .then( (res) => res.json() )
-    .then( (habit) => this.gotoInbox() )
-    .catch( (err) => console.warn(err) );
+    .then( response => res.json() )
+    .then( habit => this.gotoInbox() )
+    .catch( err => console.warn(err) );
   }
+
   deleteHabit (habitId) {
     // TODO: refactor server call to api library
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       }
     })
     .then(api.handleErrors)
     .then( () => this.props.navigator.push({ id: 'Habits' }) )
-    .catch( (err) => console.warn(err) );
+    .catch( err => console.warn(err) );
   }
+
+  toggleDay (day) {
+    let updates = this.state.habit;
+    updates.reminder.days[day] = !updates.reminder.days[day];
+    this.setState({ habit: updates });
+  }
+
   render () {
     return (
       <View style={{ flex: 1 }}>
@@ -141,11 +154,7 @@ export default class HabitSettings extends Component {
       </View>
     );
   }
-  toggleDay (day) {
-    let updates = this.state.habit;
-    updates.reminder.days[day] = !updates.reminder.days[day];
-    this.setState({ habit: updates });
-  }
+
   renderScene (route, navigator) {
     if (this.state.habit.reminder.active) {
       return (

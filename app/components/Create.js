@@ -9,7 +9,7 @@ import React, {
 } from 'react-native';
 import Button from 'react-native-button';
 
-function Create (props) {
+export default function Create (props) {
   return (
     <View style={styles.container}>
       <TextField
@@ -62,16 +62,16 @@ function SubmitButton (props) {
 
 Create.PropTypes = {
   fields: PropTypes.object.isRequired,
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
 };
 
 TextField.PropTypes = {
   title: PropTypes.string.isRequired,
-  onChangeInputText: PropTypes.func.isRequired
+  onChangeInputText: PropTypes.func.isRequired,
 };
 
 SubmitButton.PropTypes = {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -141,5 +141,3 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
 });
-
-module.exports = Create;

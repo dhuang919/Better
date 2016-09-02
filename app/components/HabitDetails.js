@@ -1,27 +1,28 @@
 'use strict';
 // React Native components
 import React, {
-  Component,
   View,
   Text,
-  StyleSheet,
-  Navigator,
-  TouchableOpacity,
   ListView,
+  PropTypes,
+  Navigator,
+  Component,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
-// custom components and methods
+// Custom components and methods
 import {
-  getPeriodArray,
   getDaysArray,
-  calendarLabel
+  calendarLabel,
+  getPeriodArray,
 } from '../lib/calendar';
 import api from '../lib/api';
 import Note from './Note';
-// external libraries and components
+// External libraries and components
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// global variables
+// Global variables
 let _habitInstances;
 let _habit;
 
@@ -29,18 +30,18 @@ export default class HabitDetails extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      date: null,
+      rowData: null,
+      instances: null,
+      instanceId: null,
+      note: { note: '' },
+      modalVisible: false,
       currentDate: moment(),
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
         }
       }),
-      modalVisible: false,
-      instances: null,
-      rowData: null,
-      instanceId: null,
-      date: null,
-      note: { note: '' },
     };
     this.hideModal = this.hideModal.bind(this);
     this.renderRow = this.renderRow.bind(this);
@@ -92,11 +93,11 @@ export default class HabitDetails extends Component {
 
   handleInstancePress (rowData) {
     this.setState({
-      modalVisible: true,
       rowData: rowData,
-      instanceId: rowData.instanceId,
-      date: rowData.ISOString,
       note: rowData.note,
+      modalVisible: true,
+      date: rowData.ISOString,
+      instanceId: rowData.instanceId,
     });
   }
 
@@ -117,8 +118,8 @@ export default class HabitDetails extends Component {
     if (moment(rowData.ISOString).isSame(this.state.currentDate, 'day') && rowData.done && rowData.note.note) {
       return (
         <TouchableOpacity
-          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
+          onPress={ () => this.handleInstancePress(rowData) }
         >
           <View style={styles.presentDoneRow}>
             <Text style={styles.rowText}>
@@ -133,8 +134,8 @@ export default class HabitDetails extends Component {
     if (moment(rowData.ISOString).isSame(this.state.currentDate, 'day') && rowData.done) {
       return (
         <TouchableOpacity
-          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
+          onPress={ () => this.handleInstancePress(rowData) }
         >
           <View style={styles.presentDoneRow}>
             <Text style={styles.rowText}>
@@ -160,14 +161,18 @@ export default class HabitDetails extends Component {
     if (rowData.done && rowData.note.note) {
       return (
         <TouchableOpacity
-          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
+          onPress={ () => this.handleInstancePress(rowData) }
         >
           <View style={styles.doneRow}>
             <Text style={styles.rowText}>
               {rowData.date}
             </Text>
-            <Icon name='sticky-note-o' size={10} color="#000000" />
+            <Icon
+              size={10}
+              color="#000000"
+              name='sticky-note-o'
+            />
           </View>
         </TouchableOpacity>
       );
@@ -176,8 +181,8 @@ export default class HabitDetails extends Component {
     if (rowData.done) {
       return (
         <TouchableOpacity
-          onPress={ () => this.handleInstancePress(rowData) }
           underlayColor="transparent"
+          onPress={ () => this.handleInstancePress(rowData) }
         >
           <View style={styles.doneRow}>
             <Text style={styles.rowText}>
@@ -230,14 +235,19 @@ export default class HabitDetails extends Component {
   renderScene (route, navigator) {
     return (
       <View style={styles.container}>
-        <Text style={styles.heading} onPress={this.onPress}>{ this.props.habit.action }</Text>
+        <Text
+          style={styles.heading}
+          onPress={this.onPress}
+        >
+          { this.props.habit.action }
+        </Text>
         <ListView
-          contentContainerStyle={styles.list}
-          dataSource={this.state.dataSource}
-          initialListSize={28}
           pageSize={7}
-          renderRow={this.renderRow}
+          initialListSize={28}
           scrollEnabled={false}
+          renderRow={this.renderRow}
+          dataSource={this.state.dataSource}
+          contentContainerStyle={styles.list}
           automaticallyAdjustContentInsets={false}
         />
         <View style={styles.count}>
@@ -252,22 +262,29 @@ export default class HabitDetails extends Component {
           </Text>
         </View>
         <Note
-          visible={this.state.modalVisible}
-          rowData={this.state.rowData}
-          instanceId={this.state.instanceId}
           note={this.state.note}
-          token={this.props.token}
-          profile={this.props.profile}
-          habit={this.props.habit}
-          getRowData={this.getRowData}
-          hideModal={this.hideModal}
           date={this.state.date}
+          token={this.props.token}
+          habit={this.props.habit}
+          hideModal={this.hideModal}
+          profile={this.props.profile}
+          rowData={this.state.rowData}
+          getRowData={this.getRowData}
+          visible={this.state.modalVisible}
+          instanceId={this.state.instanceId}
         >
         </Note>
       </View>
     );
   }
 }
+
+HabitDetails.PropTypes = {
+  habit: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.func,
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -399,7 +416,7 @@ const styles = StyleSheet.create({
   },
   count: {
     alignItems: 'center',
-    bottom: 120
+    bottom: 120,
   },
   rowText: {
     fontFamily: 'Avenir',
@@ -412,5 +429,5 @@ const styles = StyleSheet.create({
     marginTop: 5,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });

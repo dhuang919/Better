@@ -1,17 +1,18 @@
 'use strict';
 // React Native components
 import React, {
-  Component,
   View,
   Text,
+  Image,
   Alert,
   Linking,
   ListView,
+  Component,
   Navigator,
+  PropTypes,
+  Dimensions,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  Dimensions,
 } from 'react-native';
 // External libraries and components
 import moment from 'moment';
@@ -26,14 +27,14 @@ export default class Habits extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      badge: {},
+      alert: false,
+      scrollEnabled: true,
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
         },
       }),
-      scrollEnabled: true,
-      alert: false,
-      badge: {},
     };
     this.getHabits = this.getHabits.bind(this);
     this.editHabit = this.editHabit.bind(this);
@@ -50,7 +51,7 @@ export default class Habits extends Component {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
     })
     .then(api.handleErrors)
@@ -64,23 +65,15 @@ export default class Habits extends Component {
   }
 
   editHabit (habit) {
-    this.props.navigator.push({
-      id: 'HabitSettings',
-      habit: habit,
-    });
+    this.props.navigator.push({ id: 'HabitSettings', habit: habit });
   }
 
   showAlert (badge) {
     setTimeout( () => {
-      this.setState({
-        alert: true,
-        badge: badge,
-      });
+      this.setState({ alert: true, badge: badge });
     }, 500);
     setTimeout( () => {
-      this.setState({
-        alert: false,
-      });
+      this.setState({ alert: false });
     }, 3200);
   }
 
@@ -90,25 +83,22 @@ export default class Habits extends Component {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
     })
     .then(api.handleErrors)
-    .then( (response) => response.json() )
-    .then( (res) => {
+    .then( response => response.json() )
+    .then(res => {
       if (res.badges && res.badges.length) {
         this.showAlert(res.badges[0]);
       }
       this.getHabits();
     })
-    .catch( (err) => console.warn(err) );
+    .catch( err => console.warn(err) );
   }
 
   gotoDetails (habit) {
-    this.props.navigator.push({
-      id: 'HabitDetails',
-      habit: habit,
-    });
+    this.props.navigator.push({ id: 'HabitDetails', habit: habit });
   }
 
   componentDidMount () {
@@ -133,11 +123,10 @@ export default class Habits extends Component {
     return (
       <Inbox
         habit={habit}
-        deleteHabit={this.deleteHabit}
-        gotoDetails={this.gotoDetails}
         editHabit={this.editHabit}
-        toggleInstance={this.toggleInstance}
+        gotoDetails={this.gotoDetails}
         allowScroll={this.allowScroll}
+        toggleInstance={this.toggleInstance}
       />
     );
   }
@@ -163,10 +152,10 @@ export default class Habits extends Component {
     return (
       <View style={styles.container}>
         <ListView
-          dataSource={this.state.dataSource}
           renderRow={this.renderInboxRow}
-          automaticallyAdjustContentInsets={false}
+          dataSource={this.state.dataSource}
           scrollEnabled={this.state.scrollEnabled}
+          automaticallyAdjustContentInsets={false}
         />
         <Notification
           visible={this.state.alert}
@@ -174,13 +163,27 @@ export default class Habits extends Component {
           icon={this.state.badge ? this.state.badge.icon : null}
         >
         </Notification>
-        <TouchableOpacity style={styles.circleButton} onPress={this.handlePress}>
-          <Icon name='plus' size={25} color='#ffffff' />
+        <TouchableOpacity
+          style={styles.circleButton}
+          onPress={this.handlePress}
+        >
+          <Icon
+            size={25}
+            name='plus'
+            color='#ffffff'
+          />
         </TouchableOpacity>
       </View>
     );
   }
 }
+
+Habits.PropTypes = {
+  route: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.func,
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {

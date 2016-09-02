@@ -47,9 +47,9 @@ export default class AddHabit extends Component {
       this.props.resetToTabs(badge);
     } else {
       if (badge) {
-        this.props.navigator.push({ id: 'Habits', badge: badge});
+        this.props.navigator.push({ id: 'Habits', badge: badge });
       } else {
-        this.props.navigator.push({ id: 'Habits'});
+        this.props.navigator.push({ id: 'Habits' });
       }
     }
   }

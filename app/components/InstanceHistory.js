@@ -1,31 +1,36 @@
+'use strict';
 // React Native components
-var React = require('react-native');
-var api = require('../lib/api');
-var View = React.View;
-var Text = React.Text;
-var StyleSheet = React.StyleSheet;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
-var ListView = React.ListView;
-var Image = React.Image;
-
+import React, {
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  Navigator,
+  TouchableOpacity,
+  ListView,
+  Image,
+} from 'react-native';
 // external libraries and components
-var moment = require('moment');
-var getInstancePeriod = require('../lib/calendar').getInstancePeriod;
-
+import moment from 'moment';
+import api from '../lib/api';
 // custom components and methods
-var InstanceHistory = React.createClass({
-  getInitialState: function () {
-    return {
+import { getInstancePeriod } from '../lib/calendar';
+
+export default class InstanceHistory extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged: function (row1, row2) {
-          return row1 !== row2
-        }
-      })
+          return row1 !== row2;
+        },
+      }),
     };
-  },
+    this.renderRow = this.renderRow.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     var days = getInstancePeriod(this.props.habit.createdAt, moment().format());
     days.forEach(function(day) {
       this.props.instances.forEach(function (instance) {
@@ -38,9 +43,9 @@ var InstanceHistory = React.createClass({
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(days)
     })
-  },
+  }
 
-  renderRow: function (rowData, sectionID, rowID) {
+  renderRow (rowData, sectionID, rowID) {
     if (rowData.done) {
       return (
         <View style={styles.row} >
@@ -63,9 +68,9 @@ var InstanceHistory = React.createClass({
           />
       </View>
     );
-  },
+  }
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
@@ -79,9 +84,9 @@ var InstanceHistory = React.createClass({
         />
       </View>
     );
-  },
+  }
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <ListView
@@ -92,10 +97,10 @@ var InstanceHistory = React.createClass({
       </View>
     );
   }
-});
+}
 
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity
         style={{flex: 1, justifyContent: 'center'}}
@@ -108,11 +113,11 @@ var NavigationBarRouteMapper = {
     );
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 18}}>
@@ -124,7 +129,7 @@ var NavigationBarRouteMapper = {
 };
 
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 0.90,
     justifyContent: 'center',
@@ -159,5 +164,3 @@ var styles = StyleSheet.create({
     top: 16,
   }
 });
-
-module.exports = InstanceHistory;

@@ -7,6 +7,7 @@ import React, {
   Image,
   ListView,
   Navigator,
+  PropTypes,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -20,21 +21,21 @@ export default class Profile extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      habits: null,
+      badgeURIs: [],
+      progress: null,
+      nextGoalName: null,
+      nextGoalCount: null,
+      user: this.props.user,
+      currentStreakHabit: null,
+      currentStreakCount: null,
+      photo: this.props.profile.picture,
+      userName: this.props.user.userName,
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
         }
       }),
-      userName: this.props.user.userName,
-      photo: this.props.profile.picture,
-      user: this.props.user,
-      currentStreakCount: null,
-      currentStreakHabit: null,
-      nextGoalCount: null,
-      nextGoalName: null,
-      progress: null,
-      habits: null,
-      badgeURIs: [],
     };
     this.renderRow = this.renderRow.bind(this);
     this.goToBadges = this.goToBadges.bind(this);
@@ -267,6 +268,14 @@ export default class Profile extends Component {
       </View>
     );
   }
+}
+
+Profile.PropTypes = {
+  user: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.func,
+  handleLogout: PropTypes.func,
 };
 
 const NavigationBarRouteMapper = {

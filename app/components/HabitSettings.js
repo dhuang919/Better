@@ -7,26 +7,28 @@ console.ignoredYellowBox = [
 ];
 
 import React, {
-  Component,
   View,
   Text,
-  AlertIOS,
-  TextInput,
-  StyleSheet,
-  Navigator,
-  TouchableOpacity,
-  DatePickerIOS,
   Switch,
+  AlertIOS,
+  PropTypes,
+  Component,
+  TextInput,
+  Navigator,
+  StyleSheet,
+  DatePickerIOS,
+  TouchableOpacity,
 } from 'react-native';
 import api from '../lib/api';
 import Button from 'react-native-button';
 
 export default class HabitSettings extends Component {
   constructor (props) {
+    console.log('PROPS:', props);
     super(props);
     this.state = {
-      habit: props.habit,
       user: props.user,
+      habit: props.habit,
     };
     this.toggleDay = this.toggleDay.bind(this);
     this.gotoInbox = this.gotoInbox.bind(this);
@@ -125,7 +127,7 @@ export default class HabitSettings extends Component {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${this.props.token.idToken}`,
-      }
+      },
     })
     .then(api.handleErrors)
     .then( () => this.props.navigator.push({ id: 'Habits' }) )
@@ -161,96 +163,96 @@ export default class HabitSettings extends Component {
         <View style={styles.container}>
           <TextInput
             style={styles.heading}
-            defaultValue={this.props.habit.action}
             onChangeText={this.onTextChange}
+            defaultValue={this.props.habit.action}
           />
           <View style={{flexDirection: 'row', marginTop: 25}}>
             <Text style={{fontSize: 22, fontFamily: 'Avenir'}}>
               SMS Reminder
             </Text>
             <Switch
-              onValueChange={this.onReminderChange}
               style={{left: 140, marginBottom: 10}}
+              onValueChange={this.onReminderChange}
               value={this.state.habit.reminder.active}
             />
           </View>
           <DatePickerIOS
-            date={new Date(this.state.habit.reminder.time)}
             mode="time"
             minuteInterval={5}
             onDateChange={this.onDateChange}
+            date={new Date(this.state.habit.reminder.time)}
           />
           <Text style={styles.weekTitle}>Weekdays (tap to select)</Text>
           <View style={styles.week}>
             <Button
-              containerStyle={ this.state.habit.reminder.days['sun'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('sun') }
+              containerStyle={ this.state.habit.reminder.days['sun'] ? styles.dayActive : styles.dayInactive }
             >
               Sun
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['mon'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('mon') }
+              containerStyle={ this.state.habit.reminder.days['mon'] ? styles.dayActive : styles.dayInactive }
             >
               Mon
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['tue'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('tue') }
+              containerStyle={ this.state.habit.reminder.days['tue'] ? styles.dayActive : styles.dayInactive }
             >
               Tue
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['wed'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('wed') }
+              containerStyle={ this.state.habit.reminder.days['wed'] ? styles.dayActive : styles.dayInactive }
             >
               Wed
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['thu'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('thu') }
+              containerStyle={ this.state.habit.reminder.days['thu'] ? styles.dayActive : styles.dayInactive }
             >
               Thu
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['fri'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('fri') }
+              containerStyle={ this.state.habit.reminder.days['fri'] ? styles.dayActive : styles.dayInactive }
             >
               Fri
             </Button>
             <Button
-              containerStyle={ this.state.habit.reminder.days['sat'] ? styles.dayActive : styles.dayInactive }
               style={styles.dayButtonText}
               styleDisabled={{color: 'red'}}
               onPress={ () => this.toggleDay('sat') }
+              containerStyle={ this.state.habit.reminder.days['sat'] ? styles.dayActive : styles.dayInactive }
             >
               Sat
             </Button>
           </View>
           <Button
-            containerStyle={styles.updateButtonContainer}
-            style={styles.updateButtonText}
             styleDisabled={{color: 'red'}}
+            style={styles.updateButtonText}
+            containerStyle={styles.updateButtonContainer}
             onPress={ () => this.updateHabit(this.state.habit._id) }
           >
             Update Habit
           </Button>
           <Button
-            containerStyle={styles.deleteButtonContainer}
-            style={styles.deleteButtonText}
             styleDisabled={{color: 'red'}}
+            style={styles.deleteButtonText}
+            containerStyle={styles.deleteButtonContainer}
             onPress={ () => this.deleteHabit(this.state.habit._id) }
           >
             Delete Habit
@@ -262,31 +264,31 @@ export default class HabitSettings extends Component {
         <View style={styles.container}>
           <TextInput
             style={styles.heading}
-            defaultValue={this.props.habit.action}
             onChangeText={this.onTextChange}
+            defaultValue={this.props.habit.action}
           />
           <View style={{ flexDirection: 'row', marginTop: 25, marginBottom: 216 }}>
             <Text style={{fontSize: 22, fontFamily: 'Avenir'}}>
               SMS Reminder
             </Text>
             <Switch
-              onValueChange={this.onReminderChange}
               style={{left: 140, marginBottom: 10}}
+              onValueChange={this.onReminderChange}
               value={this.state.habit.reminder.active}
             />
           </View>
           <Button
-            containerStyle={styles.updateButtonContainer}
             style={styles.updateButtonText}
             styleDisabled={{color: 'red'}}
+            containerStyle={styles.updateButtonContainer}
             onPress={ () => this.updateHabit(this.state.habit._id) }
           >
             Update Habit
           </Button>
           <Button
-            containerStyle={styles.deleteButtonContainer}
-            style={styles.deleteButtonText}
             styleDisabled={{color: 'red'}}
+            style={styles.deleteButtonText}
+            containerStyle={styles.deleteButtonContainer}
             onPress={ () => this.deleteHabit(this.state.habit._id) }
           >
             Delete
@@ -296,6 +298,14 @@ export default class HabitSettings extends Component {
     }
   }
 }
+
+HabitSettings.PropTypes = {
+  user: PropTypes.object,
+  habit: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.func,
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -348,7 +358,7 @@ const styles = StyleSheet.create({
     overflow:'hidden',
     borderRadius: 4,
     backgroundColor: 'white',
-    marginTop: 15
+    marginTop: 15,
   },
   updateButtonText: {
     fontSize: 20,
@@ -361,7 +371,7 @@ const styles = StyleSheet.create({
     overflow:'hidden',
     borderRadius: 4,
     backgroundColor: '#6399DC',
-    marginTop: 15
+    marginTop: 15,
   },
   dayButtonText: {
     fontSize: 15,
@@ -373,27 +383,27 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     height: 44,
     width: 44,
-    backgroundColor: '#d4d4d4'
+    backgroundColor: '#d4d4d4',
   },
   dayActive: {
     borderRadius: 2,
     paddingTop: 12,
     height: 44,
     width: 44,
-    backgroundColor: '#499860'
+    backgroundColor: '#499860',
   },
   week: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 2
+    paddingBottom: 2,
   },
   weekTitle: {
     fontFamily: 'Avenir',
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 5,
-    color: '#adadad'
-  }
+    color: '#adadad',
+  },
 });

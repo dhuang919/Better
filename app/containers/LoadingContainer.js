@@ -1,47 +1,57 @@
-var React = require('react-native');
-var api = require('../lib/api');
-var View = React.View;
-var Navigator = React.Navigator;
-// App components
-var Loading = require('../components/Loading');
+'use strict';
+// React Native components
+import React, {
+  Component,
+  View,
+  Text,
+  Navigator,
+} from 'react-native';
+// Custom components and methods
+import api from '../lib/api';
+import Loading from '../components/Loading';
 
-var LoadingContainer = React.createClass({
-  goToOnboard: function () {
+export default class LoadingContainer extends Component {
+  constructor (props) {
+    super(props);
+    this.goToInbox = this.goToInbox.bind(this);
+    this.goToOnboard = this.goToOnboard.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+  }
+
+  goToOnboard () {
     this.props.navigator.push({id: 'Onboard'})
-  },
+  }
 
-  goToInbox: function () {
+  goToInbox () {
     this.props.navigator.push({
       id: 'Habits',
-      badge: this.props.badge
-    })
-  },
+      badge: this.props.badge,
+    });
+  }
 
-  componentDidMount: function () {
-    if (this.props.user.newUser) {
-      this.goToOnboard();
-    } else {
-      this.goToInbox();
-    }
-  },
+  componentDidMount () {
+    this.props.user.newUser ?
+    this.goToOnboard() :
+    this.goToInbox();
+  }
 
-  render: function () {
+  render () {
     return (
       <View style={{ flex: 1 }}>
         <Navigator
           renderScene={this.renderScene}
-          navigator={this.props.navigator} />
+          navigator={this.props.navigator}
+        />
       </View>
     );
-  },
+  }
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <Loading
         fields={this.fields}
-        handleClick={this.handleClick} />
+        handleClick={this.handleClick}
+      />
     );
   }
-});
-
-module.exports = LoadingContainer;
+};

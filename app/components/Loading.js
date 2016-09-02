@@ -1,9 +1,12 @@
-var React = require('react-native');
-var Text = React.Text;
-var View = React.View;
-var StyleSheet = React.StyleSheet;
+'use strict';
+// React Native components
+import React, {
+  View,
+  Text,
+  StyleSheet,
+} from 'react-native';
 
-function Loading (props) {
+export default function Loading (props) {
   return(
     <View style={styles.container}>
       <Text style={styles.text}>BETTER.</Text>
@@ -11,7 +14,7 @@ function Loading (props) {
   );
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -25,5 +28,3 @@ var styles = StyleSheet.create({
     color: '#FFFFFF',
   }
 });
-
-module.exports = Loading

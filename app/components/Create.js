@@ -61,17 +61,17 @@ function SubmitButton (props) {
 }
 
 Create.PropTypes = {
-  fields: PropTypes.object.isRequired,
-  handleClick: PropTypes.func.isRequired,
+  fields: PropTypes.object,
+  handleClick: PropTypes.func,
 };
 
 TextField.PropTypes = {
-  title: PropTypes.string.isRequired,
-  onChangeInputText: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  onChangeInputText: PropTypes.func,
 };
 
 SubmitButton.PropTypes = {
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 };
 
 const styles = StyleSheet.create({

@@ -63,7 +63,7 @@ To run tests, simply enter
 ```sh
 npm test
 ```
-At the moment, all loggers are suppressed when running tests. If you would like to allow logging, comment out the `process.env.NODE_ENV` assignment on line 2 in both `DbSpec.js` and `ServerSpec.js` files.
+At the moment, all loggers are suppressed when running tests. If you would like to allow logging, comment out the `process.env.NODE_ENV` assignment on line 2 in both `db.spec.js` and `server.spec.js` files.
 
 ### Roadmap
 

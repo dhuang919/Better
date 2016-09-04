@@ -84,7 +84,7 @@ describe('Basic Server', function () {
         done();
       })
       .catch(function (err) {
-        console.error('DbSpec afterEach error:', err);
+        console.error('db.spec afterEach error:', err);
       });
   });
 

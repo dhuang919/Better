@@ -9,20 +9,19 @@ import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
 // Loading component dependency
-import Loading from '../app/components/Loading';
+import Loading from '../../app/components/Loading';
 
 // CreateContainer dependencies
 import {
   Create,
   TextField,
   SubmitButton,
-} from '../app/components/Create';
-import AddHabits from '../app/containers/CreateContainer';
+} from '../../app/components/Create';
+import AddHabits from '../../app/containers/CreateContainer';
 
 // InboxContainer dependencies
-import Inbox from '../app/components/Inbox';
-import Habits from '../app/containers/InboxContainer';
-
+import Inbox from '../../app/components/Inbox';
+import Habits from '../../app/containers/InboxContainer';
 
 describe('<Loading />', () => {
   it('it should render 1 view component', () => {

@@ -29,8 +29,8 @@ config.ignore = function(filename) {
       "react-native-progress-bar"
     ];
 
-    for (var i = 0; i < modulesToCompile.length; i++ ) {
-      if(filename.includes(modulesToCompile[i])) {
+    for (var i = 0; i < modulesToCompile.length; i++) {
+      if (filename.includes(modulesToCompile[i])) {
         return false;
       }
     }

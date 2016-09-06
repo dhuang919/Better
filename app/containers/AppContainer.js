@@ -9,8 +9,8 @@ import React, {
 } from 'react-native';
 // App components
 import Habits from './InboxContainer';
-import Onboard from './OnboardContainer';
 import AddHabit from './CreateContainer';
+import OnboardContainer from './OnboardContainer';
 import LoadingContainer from './LoadingContainer';
 import HabitDetails from '../components/HabitDetails';
 import HabitSettings from '../components/HabitSettings';
@@ -59,7 +59,7 @@ export default class AppContainer extends Component {
         );
       case 'Onboard':
         return (
-          <Onboard
+          <OnboardContainer
             navigator={navigator}
           />
         );

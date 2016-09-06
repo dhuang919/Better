@@ -5,14 +5,15 @@ import React, {
   Text,
   Navigator,
 } from 'react-native';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { shallow, mount } from 'enzyme';
 // Loading component
 import Loading from '../../app/components/Loading';
 // Loading container
 import LoadingContainer from '../../app/containers/LoadingContainer';
-
+// Testing dependencies
+import sinon from 'sinon';
+import { expect } from 'chai';
+import { shallow, mount } from 'enzyme';
+// Wrappers
 const componentWrapper = shallow(<Loading />);
 
 describe('Loading container', () => {

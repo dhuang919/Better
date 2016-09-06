@@ -13,7 +13,7 @@ import React, {
 import api from '../lib/api';
 import { Create } from '../components/Create';
 
-export default class AddHabit extends Component {
+export default class CreateContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -101,7 +101,7 @@ export default class AddHabit extends Component {
   }
 }
 
-AddHabit.PropTypes = {
+CreateContainer.PropTypes = {
   token: PropTypes.object,
   onboard: PropTypes.bool,
   profile: PropTypes.object,

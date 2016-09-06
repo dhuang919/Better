@@ -16,7 +16,7 @@ export class Welcome extends Component {
 
   onPressButton () {
     this.props.navigator.push({
-      id: 'AddHabit',
+      id: 'CreateContainer',
       onboard: true,
     });
   }

@@ -9,7 +9,7 @@ import React, {
 } from 'react-native';
 // App components
 import Habits from './InboxContainer';
-import AddHabit from './CreateContainer';
+import CreateContainer from './CreateContainer';
 import OnboardContainer from './OnboardContainer';
 import LoadingContainer from './LoadingContainer';
 import HabitDetails from '../components/HabitDetails';
@@ -63,9 +63,9 @@ export default class AppContainer extends Component {
             navigator={navigator}
           />
         );
-      case 'AddHabit':
+      case 'CreateContainer':
         return (
-          <AddHabit
+          <CreateContainer
           habit={route.habit}
             navigator={navigator}
             token={this.state.token}

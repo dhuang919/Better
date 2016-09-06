@@ -7,7 +7,6 @@ import React, {
   Navigator,
 } from 'react-native';
 // Custom components and methods
-import api from '../lib/api';
 import Loading from '../components/Loading';
 
 export default class LoadingContainer extends Component {

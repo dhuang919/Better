@@ -24,15 +24,12 @@ var Instances = require('../db/models').Instances;
 var helpers = require('../server/helpers');
 
 describe('Database', function () {
-
   describe('Helpers', function () {
-
     // Example user
     var user = {
       email: 'yolo@yolo.com',
       nickname: 'yolo'
     };
-
     // Example habits with habit1Id to be assigned in
     // beforeEach and used in habit update/delete
     var habit1Id, habit2Id;
@@ -44,11 +41,9 @@ describe('Database', function () {
       action: 'Floss',
       frequency: 'Daily'
     };
-
     // Instance ID to be assigned in beforeEach
     // to habit1 and used in deleteHabit
     var instance1Id;
-
     beforeEach(function (done) {
       request(app)
         .post('/user')
@@ -83,7 +78,6 @@ describe('Database', function () {
       var dropUser = User.remove({});
       var dropHabits = Habits.remove({});
       var dropInstances = Instances.remove({});
-
       // Promise.join coordinates a fixed number of promises concurrently
       Join(dropUser, dropHabits, dropInstances)
         .then(function (success) {
@@ -293,7 +287,5 @@ describe('Database', function () {
           });
       });
     });
-
   });
-
 });

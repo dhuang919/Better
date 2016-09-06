@@ -21,8 +21,21 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 // Wrappers
-let createWrapper = shallow(<Create />);
-let createContainerWrapper = shallow(<CreateContainer />);
+let createWrapper = shallow(
+  <Create
+    fields={{ action: 'foo' }}
+    handleClick={() => {}}
+  />
+);
+let createContainerWrapper = shallow(
+  <CreateContainer
+    token={{}}
+    profile={{}}
+    navigator={{}}
+    onboard={false}
+    resetToTabs={{}}
+  />
+);
 
 describe('Create Container', () => {
   it('should ', () => {

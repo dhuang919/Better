@@ -5,7 +5,7 @@
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/loading.spec.js",
+    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/create.spec.js",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },
@@ -46,6 +46,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "enzyme": "^2.1.0",
+    "fetch-mock": "^5.1.1",
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",

@@ -82,8 +82,9 @@ export default class CreateContainer extends Component {
           renderScene={this.renderScene}
           navigator={this.props.navigator}
           navigationBar={
-            <Navigator.NavigationBar style={{backgroundColor: '#6399DC', alignItems: 'center'}}
+            <Navigator.NavigationBar
               routeMapper={NavigationBarRouteMapper}
+              style={{backgroundColor: '#6399DC', alignItems: 'center'}}
             />
           }
         />

@@ -25,8 +25,18 @@ import { shallow, mount } from 'enzyme';
 // Wrappers
 let submitButtonWrapper = shallow(<SubmitButton />);
 let createContainerWrapper = shallow(<CreateContainer />);
-let textFieldWrapper = shallow(<TextField onChange={() => {}}/>);
-let createWrapper = shallow(<Create fields={{ action: 'foo' }} />);
+let createWrapper = shallow(
+  <Create
+    handleClick={() => {}}
+    fields={{ action: 'foo' }}
+  />
+);
+let textFieldWrapper = shallow(
+  <TextField
+    title={'foo'}
+    onChange={() => {}}
+  />
+);
 
 describe('Create Container', () => {
   it('should render 1 View component', () => {
@@ -136,16 +146,45 @@ describe('Create Container', () => {
     it('should ', () => {
       createWrapper.find(TextField).node.props.onChange();
     });
+
+    it('should render 2 View components', () => {
+      expect(createWrapper.find(View)).to.have.length(2);
+    });
+
+    it('should render 1 custom TextField component', () => {
+      expect(createWrapper.find(TextField)).to.have.length(1);
+    });
+
+    it('should render 1 custom SubmitButton component', () => {
+      expect(createWrapper.find(SubmitButton)).to.have.length(1);
+    });
+
+    it('should render 4 Text components', () => {
+      expect(createWrapper.find(Text)).to.have.length(4);
+    });
   });
 
   describe('TextField component', () => {
-    it('should ', () => {
+    it('should render 1 View component', () => {
+      expect(textFieldWrapper.find(View)).to.have.length(1);
+    });
+
+    it('should render 1 Text component', () => {
+      expect(textFieldWrapper.find(Text)).to.have.length(1);
+    });
+
+    it('should render 1 TextInput component', () => {
+      expect(textFieldWrapper.find(TextInput)).to.have.length(1);
+    });
+
+    it('should render props.title as the text in the Text component', () => {
+      expect(textFieldWrapper.find(Text).props().children).to.equal('foo');
     });
   });
 
   describe('SubmitButton component', () => {
-    it('should ', () => {
-
+    it('should render 1 Button component', () => {
+      expect(submitButtonWrapper.find(Button)).to.have.length(1);
     });
   });
 });

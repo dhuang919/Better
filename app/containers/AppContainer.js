@@ -66,7 +66,7 @@ export default class AppContainer extends Component {
       case 'CreateContainer':
         return (
           <CreateContainer
-          habit={route.habit}
+            habit={route.habit}
             navigator={navigator}
             token={this.state.token}
             profile={this.state.profile}

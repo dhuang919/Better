@@ -16,7 +16,7 @@ import { shallow, mount } from 'enzyme';
 // Wrappers
 const componentWrapper = shallow(<Loading />);
 
-describe('Loading container', () => {
+describe('Loading Container', () => {
   it('shoulder render 1 View component', () => {
     const containerWrapper = shallow(<LoadingContainer />);
     expect(containerWrapper.find(View)).to.have.length(1);

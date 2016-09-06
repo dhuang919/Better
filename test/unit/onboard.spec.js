@@ -25,10 +25,9 @@ import { shallow, mount } from 'enzyme';
 const welcomeWrapper = shallow(<Welcome />);
 const pageOneWrapper = shallow(<PageOne />);
 const pageTwoWrapper = shallow(<PageTwo />);
-
 const onboardContainerWrapper = shallow(<OnboardContainer />);
 
-describe('Onboard container', () => {
+describe('Onboard Container', () => {
   it('should render a Swiper component', () => {
     expect(onboardContainerWrapper.find(Swiper)).to.have.length(1);
   });

@@ -52,7 +52,7 @@ describe('Profile Container', () => {
 
   describe('Profile component', () => {
     it('should render  View components', () => {
-      console.log('FOO:', profileWrapper.find(View).length);
+
     });
 
     describe('Navigation Bar Route Mapper', () => {

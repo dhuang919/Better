@@ -4,6 +4,7 @@ import React, {
   View,
   Text,
   Image,
+  ListView,
   Navigator,
 } from 'react-native';
 // Profile component
@@ -35,6 +36,12 @@ const profileContainerWrapper = shallow(
     token={{}}
     profile={{}}
     handleLogout={() => {}}
+  />
+);
+const badgeViewWrapper = shallow(
+  <BadgeView
+    navigator={{}}
+    earnedBadges={{}}
   />
 );
 

@@ -1,6 +1,10 @@
-export function handleErrors (response) {
-  if (!response.ok) {
-    throw Error(response.statusText);
+const api = {
+  handleErrors (response) {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
   }
-  return response;
-}
+};
+
+export default api;

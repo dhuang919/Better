@@ -5,7 +5,7 @@
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/create.spec.js",
+    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/api.spec.js",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },
@@ -67,6 +67,9 @@
       "lcov",
       "text-summary"
     ],
+    "scripts": {
+      "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
+    },
     "check-coverage": true,
     "report-dir": "./coverage"
   }

@@ -110,7 +110,7 @@ CreateContainer.PropTypes = {
   resetToTabs: PropTypes.func,
 };
 
-const NavigationBarRouteMapper = {
+export const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return null;
   },

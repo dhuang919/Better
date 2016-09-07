@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 
 function getBabelRC() {
-  var rcpath = path.join(__dirname, '..', 'thesis/.babelrc');
+  var rcpath = path.join(__dirname, '.babelrc');
   var source = fs.readFileSync(rcpath).toString();
   return JSON.parse(source);
 }

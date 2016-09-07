@@ -5,7 +5,7 @@
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/api.spec.js",
+    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/create.spec.js",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },
@@ -62,7 +62,7 @@
     "lines": 90,
     "statements": 90,
     "functions": 90,
-    "branches": 90,
+    "branches": 85,
     "reporter": [
       "lcov",
       "text-summary"

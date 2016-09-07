@@ -14,7 +14,7 @@ import {
   SubmitButton,
 } from '../../app/components/Create';
 // Create container
-import CreateContainer from '../../app/containers/CreateContainer';
+import CreateContainer, { NavigationBarRouteMapper } from '../../app/containers/CreateContainer';
 // Custom components
 import Button from 'react-native-button';
 // Testing dependencies
@@ -51,6 +51,46 @@ describe('Create Container', () => {
     expect(createContainerWrapper.state()).to.eql({ fields: { action: null } });
   });
 
+  describe('Navigation Bar Route Mapper', () => {
+    it('should be an object with 3 methods', () => {
+      expect(NavigationBarRouteMapper).to.be.an('object');
+      expect(NavigationBarRouteMapper.LeftButton).to.be.a('function');
+      expect(NavigationBarRouteMapper.RightButton).to.be.a('function');
+      expect(NavigationBarRouteMapper.Title).to.be.a('function');
+    });
+
+    describe('LeftButton', () => {
+      it('should return null', () => {
+        expect(NavigationBarRouteMapper.LeftButton()).to.be.null;
+      });
+    });
+
+    describe('RightButton', () => {
+      it('should return null', () => {
+        expect(NavigationBarRouteMapper.RightButton()).to.be.null;
+      });
+    });
+
+    describe('Title', () => {
+      let wrapper;
+      before(() => {
+        wrapper = shallow(<NavigationBarRouteMapper.Title />);
+      });
+
+      it('should return a TouchableOpacity component', () => {
+        expect(wrapper.find('TouchableOpacity')).to.have.length(1);
+      });
+
+      it('should return 1 nested Text component', () => {
+        expect(wrapper.find(Text)).to.have.length(1);
+      });
+
+      it('should render a Text component which reads "New Habit"', () => {
+        expect(wrapper.find(Text).children().node).to.equal('New Habit');
+      });
+    });
+  });
+
   describe('Methods', () => {
     afterEach(() => {
       fetchMock.restore();
@@ -71,7 +111,9 @@ describe('Create Container', () => {
       expect(fullContainerWrapper.node.sendHabit).to.be.a('function');
     });
 
-    it('should error', () => {
+    it('sendHabit should log errors', () => {
+      let mockError = new Error('foo');
+      fetchMock.post(/\/habits/, { throws: mockError });
       let fullContainerWrapper = mount(
         <CreateContainer
           token={{}}
@@ -81,8 +123,6 @@ describe('Create Container', () => {
           navigator={{ push: function() {} }}
         />
       );
-      let error = new Error('foo');
-      fetchMock.post(/\/habits/, { throws: error });
       fullContainerWrapper.node.sendHabit();
     });
 
@@ -143,10 +183,6 @@ describe('Create Container', () => {
   });
 
   describe('Create component', () => {
-    it('should ', () => {
-      createWrapper.find(TextField).node.props.onChange();
-    });
-
     it('should render 2 View components', () => {
       expect(createWrapper.find(View)).to.have.length(2);
     });
@@ -161,6 +197,10 @@ describe('Create Container', () => {
 
     it('should render 4 Text components', () => {
       expect(createWrapper.find(Text)).to.have.length(4);
+    });
+
+    it('should pass a callback function to TextField', () => {
+      createWrapper.find(TextField).node.props.onChange();
     });
   });
 

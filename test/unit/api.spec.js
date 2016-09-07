@@ -1,5 +1,6 @@
-import { handleErrors } from '../../app/lib/api';
+'use strict';
 import { expect } from 'chai';
+import { handleErrors } from '../../app/lib/api';
 
 describe('api helper', () => {
   describe('handleErrors', () => {

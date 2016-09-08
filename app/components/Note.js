@@ -96,7 +96,7 @@ export default class Note extends Component {
                 placeholder="Write a note.."
                 onChangeText={this.onTextChange}
                 defaultValue={this.state.note.note}
-                style={{height: 250, width: 300, fontSize: 18, borderColor: 'white', borderWidth: 1}}
+                style={{height: 175, width: 300, fontSize: 18, borderColor: 'white', borderWidth: 1}}
               />
               <View style={styles.formControls}>
                 <TouchableOpacity
@@ -154,13 +154,13 @@ Note.PropTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     padding: 20,
   },
   innerContainer: {
     borderRadius: 10,
-    height: 400,
+    height: 300,
     alignItems: 'center',
+    top: 40,
   },
   modalButton: {
     marginHorizontal: 5,

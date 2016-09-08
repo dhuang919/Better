@@ -5,8 +5,8 @@
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "pretest": "mocha test/ServerSpec.js; mocha test/DbSpec.js",
-    "test": "mocha --require setup.js --compilers js:babel-core/register test/ClientSpec.js",
+    "pretest": "mocha test/server.spec.js; mocha test/db.spec.js",
+    "test": "mocha --require setup.js --compilers js:babel-core/register test/client.spec.js",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },

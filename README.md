@@ -1,4 +1,5 @@
 # Better
+[![Build Status](https://travis-ci.org/betterhabits/Better.svg?branch=master)](https://travis-ci.org/betterhabits/Better)
 
 > Get Better.  
 ![Better demo](https://cloud.githubusercontent.com/assets/13752714/15801337/c9b6feb4-2a5f-11e6-841a-6f8146c7c7a3.gif)
@@ -46,7 +47,7 @@ From the ios directory:
 pod install
 ```
 
-Once all dependencies are finished installing, set the `localServer` flag on line 17 in `index.ios.js` to `true`. This enables development on http://localhost:3000. Then enter:
+Once all dependencies are finished installing, set the `localServer` flag on line 21 in `index.ios.js` to `true`. This enables development on http://localhost:3000. Then enter:
 
 ```sh
 mongod
@@ -63,7 +64,7 @@ To run tests, simply enter
 ```sh
 npm test
 ```
-At the moment, all loggers are suppressed when running tests. If you would like to allow logging, comment out the `process.env.NODE_ENV` assignment on line 2 in both `DbSpec.js` and `ServerSpec.js` files.
+At the moment, all loggers are suppressed when running tests. If you would like to allow logging, comment out the `process.env.NODE_ENV` assignment on line 2 in both `db.spec.js` and `server.spec.js` files.
 
 ### Roadmap
 

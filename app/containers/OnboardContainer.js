@@ -1,8 +1,7 @@
 'use strict';
-import React, {
-  View,
-  Navigator,
-} from 'react-native';
+// React Native components
+import React from 'react-native';
+// Custom components
 import {
   Welcome,
   PageOne,
@@ -10,16 +9,12 @@ import {
 } from '../components/Onboard';
 import Swiper from 'react-native-swiper';
 
-const OnboardContainer = React.createClass({
-  render () {
-    return (
-      <Swiper loop={false}>
-        <PageOne />
-        <PageTwo />
-        <Welcome navigator={this.props.navigator} />
-      </Swiper>
-    );
-  }
-});
-
-module.exports = OnboardContainer;
+export default function OnboardContainer (props) {
+  return (
+    <Swiper loop={false}>
+      <PageOne />
+      <PageTwo />
+      <Welcome navigator={props.navigator} />
+    </Swiper>
+  );
+}

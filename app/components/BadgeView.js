@@ -1,46 +1,54 @@
-var React = require('react-native');
-var api = require('../lib/api');
-var badges = require('../lib/badges');
-var View = React.View;
-var Text = React.Text;
-var StyleSheet = React.StyleSheet;
-var Navigator = React.Navigator;
-var TouchableOpacity = React.TouchableOpacity;
-var ListView = React.ListView;
-var Image = React.Image;
-var ScrollView = React.ScrollView;
+'use strict';
+// React Native components
+import React, {
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  Navigator,
+  TouchableOpacity,
+  ListView,
+  Image,
+  ScrollView,
+} from 'react-native';
+// Custom components and methods
+import api from '../lib/api';
+import badges from '../lib/badges';
 
-var BadgeView = React.createClass({
-  getInitialState: function () {
-    return {
+export default class BadgeView extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       dataSource: new ListView.DataSource({
-        rowHasChanged: function (row1, row2) {
+        rowHasChanged (row1, row2) {
           return row1 !== row2;
-        }
-      })
+        },
+      }),
     };
-  },
+    this.renderRow = this.renderRow.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+  }
 
-  componentDidMount: function () {
-    var allBadges = [];
-    for(var key in badges) {
+  componentDidMount () {
+    let allBadges = [];
+    for(let key in badges) {
       allBadges.push({name: key, uri: badges[key].uri, earned: false});
     }
 
-    allBadges.forEach(function (badge) {
-      this.props.earnedBadges.forEach(function (userBadge) {
+    allBadges.forEach(badge => {
+      this.props.earnedBadges.forEach(userBadge => {
         if (userBadge.hasOwnProperty(badge.name)) {
           badge.earned = true;
         }
       });
-    }.bind(this));
+    });
 
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(allBadges)
     });
-  },
+  }
 
-  renderRow: function (rowData, sectionID, rowID) {
+  renderRow (rowData, sectionID, rowID) {
     if (rowData.earned) {
       return (
         <View>
@@ -57,25 +65,26 @@ var BadgeView = React.createClass({
           </TouchableOpacity>
         </View>
       );
-    }
-    return (
-      <View>
+    } else {
+      return (
+        <View>
         <TouchableOpacity underlayColor="transparent">
-          <View style={styles.row}>
-            <Image
-              style={styles.unearnedBadges}
-              source={{uri: rowData.uri}}
-            />
-            <Text style={styles.names}>
-              {rowData.name}
-            </Text>
-          </View>
+        <View style={styles.row}>
+        <Image
+          style={styles.unearnedBadges}
+          source={{uri: rowData.uri}}
+        />
+        <Text style={styles.names}>
+        {rowData.name}
+        </Text>
+        </View>
         </TouchableOpacity>
-      </View>
-    );
-  },
+        </View>
+      );
+    }
+  }
 
-  render: function () {
+  render () {
     return (
       <Navigator
         renderScene={this.renderScene}
@@ -87,29 +96,28 @@ var BadgeView = React.createClass({
         }
       />
     );
-  },
+  }
 
-  renderScene: function (route, navigator) {
+  renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow}
-          contentContainerStyle={styles.list}
-          initialListSize={21}
           pageSize={3}
+          initialListSize={21}
+          renderRow={this.renderRow}
+          dataSource={this.state.dataSource}
+          contentContainerStyle={styles.list}
         />
       </View>
     );
   }
+};
 
-});
-
-var NavigationBarRouteMapper = {
-  LeftButton: function (route, navigator, index, navState) {
+const NavigationBarRouteMapper = {
+  LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-          onPress={function () {navigator.parentNavigator.pop()}}>
+          onPress={ () => navigator.parentNavigator.pop() }>
         <Text style={{color: 'white', margin: 10}}>
           Back
         </Text>
@@ -117,11 +125,11 @@ var NavigationBarRouteMapper = {
     );
   },
 
-  RightButton: function (route, navigator, index, navState) {
+  RightButton (route, navigator, index, navState) {
     return null;
   },
 
-  Title: function (route, navigator, index, navState) {
+  Title (route, navigator, index, navState) {
     return (
       <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
         <Text style={{color: 'white', margin: 10, fontSize: 18}}>
@@ -132,7 +140,7 @@ var NavigationBarRouteMapper = {
   }
 };
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 0.90,
     justifyContent: 'center',
@@ -142,7 +150,7 @@ var styles = StyleSheet.create({
     top: 90,
     justifyContent: 'space-around',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   row: {
     top: 4,
@@ -152,21 +160,19 @@ var styles = StyleSheet.create({
     width: 100,
     height: 125,
     backgroundColor: '#fff',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   badges: {
     height: 75,
-    width: 75
+    width: 75,
   },
   unearnedBadges: {
     height: 75,
     width: 75,
-    opacity: 0.3
+    opacity: 0.3,
   },
   names: {
     width: 120,
     textAlign: 'center',
   },
 });
-
-module.exports = BadgeView;

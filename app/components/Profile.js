@@ -1,11 +1,13 @@
 'use strict';
 // React Native components
 import React, {
+  Component,
   View,
   Text,
   Image,
   ListView,
   Navigator,
+  PropTypes,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -15,36 +17,43 @@ import api from '../lib/api';
 import Button from 'react-native-button';
 import ProgressBar from 'react-native-progress-bar';
 
-const Profile = React.createClass({
-  getInitialState () {
-    return {
+export default class Profile extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      habits: null,
+      badgeURIs: [],
+      progress: null,
+      nextGoalName: null,
+      nextGoalCount: null,
+      user: this.props.user,
+      currentStreakHabit: null,
+      currentStreakCount: null,
+      photo: this.props.profile.picture,
+      userName: this.props.user.userName,
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
         }
       }),
-      userName: this.props.user.userName,
-      photo: this.props.profile.picture,
-      user: this.props.user,
-      currentStreakCount: null,
-      currentStreakHabit: null,
-      nextGoalCount: null,
-      nextGoalName: null,
-      progress: null,
-      habits: null,
-      badgeURIs: [],
     };
-  },
+    this.renderRow = this.renderRow.bind(this);
+    this.goToBadges = this.goToBadges.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.parseUserData = this.parseUserData.bind(this);
+    this.refreshUserData = this.refreshUserData.bind(this);
+    this.calculateProgress = this.calculateProgress.bind(this);
+  }
   // invoking refreshUserData in both componentDidMount
   // and componentWillReceiveProps ensures user data is
   // current each time the profile page is accessed
   componentDidMount () {
     this.refreshUserData();
-  },
+  }
 
   componentWillReceiveProps () {
     this.refreshUserData();
-  },
+  }
 
   refreshUserData () {
     fetch(`${process.env.SERVER}/user/${this.props.user.email}`, {
@@ -57,7 +66,7 @@ const Profile = React.createClass({
     .then( (response) => response.json() )
     .then(this.parseUserData)
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   parseUserData (newData) {
     // user will be set as state in order to
@@ -107,17 +116,17 @@ const Profile = React.createClass({
     let current = this.calculateProgress(earned, habits);
 
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(badgeURIs),
       user: user,
-      currentStreakCount: current.progress.count,
-      currentStreakHabit: current.progress.habit,
-      nextGoalCount: current.goal,
-      nextGoalName: current.goalName,
-      progress: current.progress.count/current.goal,
       habits: habits,
       badgeURIs: badgeURIs,
+      nextGoalCount: current.goal,
+      nextGoalName: current.goalName,
+      currentStreakCount: current.progress.count,
+      currentStreakHabit: current.progress.habit,
+      progress: current.progress.count/current.goal,
+      dataSource: this.state.dataSource.cloneWithRows(badgeURIs),
     });
-  },
+  }
 
   calculateProgress (earnedStreaks, userHabits) {
     let goal;
@@ -155,11 +164,11 @@ const Profile = React.createClass({
     }
 
     return {
-      progress: progress,
       goal: goal,
+      progress: progress,
       goalName: goalName,
     };
-  },
+  }
 
   goToBadges () {
     // earnedBadges is passed to the BadgeView component so
@@ -168,21 +177,21 @@ const Profile = React.createClass({
       id: 'Badges',
       earnedBadges: this.state.user.badges,
     });
-  },
+  }
 
   renderRow (badges) {
     return (
       <View>
         <Image
-          source={{uri: badges.uri}}
           style={styles.badges}
+          source={{uri: badges.uri}}
         />
         <Text style={styles.badgeTitle}>
           {badges.name}
         </Text>
       </View>
     );
-  },
+  }
 
   render () {
     return (
@@ -196,7 +205,7 @@ const Profile = React.createClass({
         }
       />
     );
-  },
+  }
 
   renderScene () {
     return (
@@ -215,9 +224,9 @@ const Profile = React.createClass({
             Recently Earned Badges
           </Text>
           <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow}
             scrollEnabled={false}
+            renderRow={this.renderRow}
+            dataSource={this.state.dataSource}
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={styles.recentBadges}
           />
@@ -230,10 +239,10 @@ const Profile = React.createClass({
             Current streak: {this.state.currentStreakCount}
           </Text>
           <ProgressBar
+            progress={this.state.progress}
             fillStyle={styles.progressFill}
             backgroundStyle={styles.progress}
             style={{marginVertical: 10, width: 300, height: 15}}
-            progress={this.state.progress}
           />
         <Text style={{fontFamily: 'Avenir'}}>
           <Text style={{fontWeight: 'bold'}}>{this.state.nextGoalName} </Text>
@@ -242,16 +251,16 @@ const Profile = React.createClass({
         </View>
         <View style={styles.container}>
           <Button
-            containerStyle={styles.badgeViewContainer}
-            style={styles.badgeViewText}
             onPress={this.goToBadges}
+            style={styles.badgeViewText}
+            containerStyle={styles.badgeViewContainer}
           >
             View All Badges
           </Button>
           <Button
-            containerStyle={styles.logoutContainer}
             style={styles.logoutText}
             onPress={this.props.handleLogout}
+            containerStyle={styles.logoutContainer}
           >
             Logout
           </Button>
@@ -259,7 +268,15 @@ const Profile = React.createClass({
       </View>
     );
   }
-});
+}
+
+Profile.PropTypes = {
+  user: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.object,
+  handleLogout: PropTypes.func,
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -378,5 +395,3 @@ const styles = StyleSheet.create({
     color: '#e14f3f',
   },
 });
-
-module.exports = Profile;

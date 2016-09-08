@@ -1,28 +1,33 @@
-var React = require('react-native');
-var Component = React.Component,
-    PropTypes = React.PropTypes,
-    Text = React.Text,
-    Animated = React.Animated,
-    Dimensions = React.Dimensions,
-    View = React.View;
+'use strict';
+// React Native components
+import React, {
+  Component,
+  PropTypes,
+  Text,
+  View,
+  Animated,
+  Dimensions,
+} from 'react-native';
 
-var Screen = Dimensions.get('window');
+const Screen = Dimensions.get('window');
 
-var Notification = React.createClass({
-
-  getInitialState: function () {
-    return {
+export default class Notification extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       opacityValue: new Animated.Value(Notification.minOpacity),
     };
-  },
+    this.fadeIn = this.fadeIn.bind(this);
+    this.fadeOut = this.fadeOut.bind(this);
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     if (this.props.visible) {
       this.fadeIn();
     }
-  },
+  }
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (nextProps.visible && !this.props.visible) {
       this.fadeIn();
     } else {
@@ -30,41 +35,38 @@ var Notification = React.createClass({
         this.fadeOut();
       }
     }
-  },
+  }
 
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     // TODO: Compare the messages with each other
     /* if (this.props.message !== nextProps.message) {
       return true;
     }*/
-
     if (this.props.visible !== nextProps.visible) {
       return true;
     }
-
     // TODO: Is there a reliable way not use `__getValue` and something else that may not be as unstable
     if (this.state.opacityValue.__getValue() !== this.state.opacityValue.__getValue()) {
       return true;
     }
-
     return false;
-  },
+  }
 
-  fadeIn: function () {
+  fadeIn () {
     Animated.timing(this.state.opacityValue, {
       duration: Notification.fadeTime,
       toValue: Notification.maxOpacity,
     }).start();
-  },
+  }
 
-  fadeOut: function () {
+  fadeOut () {
     Animated.timing(this.state.opacityValue, {
       duration: Notification.fadeTime,
       toValue: Notification.minOpacity,
     }).start();
-  },
+  }
 
-  render: function () {
+  render () {
     if (this.props.icon) var icon = this.props.icon.substring(0);
     if (this.props.name) var name = this.props.name.substring(0);
 
@@ -77,22 +79,22 @@ var Notification = React.createClass({
         </Animated.View>
       </Animated.View>
     );
-  },
-});
-
-Notification.propTypes = {
-  visible: PropTypes.bool,
-  icon: PropTypes.string,
-  name: PropTypes.string
-};
-
-Notification.defaultProps = {
-  visible: false,
+  }
 };
 
 Notification.fadeTime = 600;
 Notification.minOpacity = 0.0;
 Notification.maxOpacity = 0.9;
+
+Notification.defaultProps = {
+  visible: false,
+};
+
+Notification.propTypes = {
+  icon: PropTypes.string,
+  name: PropTypes.string,
+  visible: PropTypes.bool,
+};
 
 Notification.styles = {
   container: {
@@ -117,26 +119,24 @@ Notification.styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: 10,
-    opacity: Notification.minOpacity
+    opacity: Notification.minOpacity,
   },
   alertTitle: {
     fontSize: 16,
     color: '#6b6b6b',
     fontWeight: 'bold',
     marginBottom: 5,
-    opacity: Notification.minOpacity
+    opacity: Notification.minOpacity,
   },
   alertText: {
     fontSize: 14,
     color: '#6b6b6b',
     marginTop: 5,
-    opacity: Notification.minOpacity
+    opacity: Notification.minOpacity,
   },
   alertImage: {
     height: 70,
     width: 70,
-    opacity: Notification.minOpacity
+    opacity: Notification.minOpacity,
   }
 };
-
-module.exports = Notification;

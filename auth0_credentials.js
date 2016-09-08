@@ -2,9 +2,7 @@
  * Auth0 account
  */
 
-var Auth0credentials = {
+module.exports = {
   clientId: "hGVHC3zdxPRaakjsPcPMglpc5fv7J9PN",
-  domain: "betterapp.auth0.com"
-}
-
-module.exports = Auth0credentials;
+  domain: "betterapp.auth0.com",
+};

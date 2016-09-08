@@ -1,25 +1,24 @@
 'use strict';
-
 // React Native components
-var React = require('react-native')
-var AppRegistry = React.AppRegistry;
-var TabBarIOS = React.TabBarIOS;
-var View = React.View;
-var Text = React.Text;
-var Image = React.Image;
-
-// external libraries and components
-var Icon = require('react-native-vector-icons/Foundation');
-var Auth0credentials = require('./auth0_credentials');
-var Auth0Lock = require('react-native-lock-ios');
-
-// custom components and methods
-var AppContainer = require('./app/containers/AppContainer');
-var ProfileContainer = require('./app/containers/ProfileContainer');
-var api = require('./app/lib/api');
+import React, {
+  AppRegistry,
+  Component,
+  View,
+  Text,
+  Image,
+  TabBarIOS,
+} from 'react-native';
+// External libraries and components
+import Auth0Lock from 'react-native-lock-ios';
+import { clientId, domain } from './auth0_credentials';
+import Icon from 'react-native-vector-icons/Foundation';
+// Custom components and methods
+import api from './app/lib/api';
+import AppContainer from './app/containers/AppContainer';
+import ProfileContainer from './app/containers/ProfileContainer';
 
 // EDIT THIS VARIABLE FOR LOCAL TESTING
-var localServer = false;
+const localServer = false;
 
 // DO NOT EDIT THIS
 if (localServer === true) {
@@ -29,156 +28,144 @@ if (localServer === true) {
 }
 
 // Instantiate a new Lock
-var lock = new Auth0Lock({clientId: Auth0credentials.clientId, domain: Auth0credentials.domain});
+const lock = new Auth0Lock({ clientId, domain });
 
-var TabContainer = React.createClass({
-  getInitialState: function () {
-    return {
+class TabContainer extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      user: null,
+      auth: false,
+      token: null,
+      onboard: null,
+      profile: null,
       selectedTab: 'inbox',
-      auth: false,
-      profile: null,
-      token: null,
-      user: null,
-      onboard: null,
-    }
-  },
+    };
+    this.showLock = this.showLock.bind(this);
+    this.resetToTabs = this.resetToTabs.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
 
-  handleLogout: function () {
+  handleLogout () {
     this.setState({
+      user: null,
       auth: false,
       token: null,
-      profile: null,
-      user: null,
       onboard: null,
+      profile: null,
     });
     this.showLock();
-  },
+  }
 
-  showLock: function () {
+  showLock () {
     // Display login widget
-    lock.show({}, (function (err, profile, token) {
+    lock.show({}, (err, profile, token) => {
       if (err) {
         console.log(err);
         return;
       }
       // Store user in DB
-      fetch(process.env.SERVER + '/user', {
+      fetch(`${process.env.SERVER}/user`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token.idToken,
+          'Authorization': `Bearer ${token.idToken}`,
         },
         body: JSON.stringify(profile),
       })
       .then(api.handleErrors)
-      .then(function (response) {
-        return response.json();
-      })
-      .then((function (user) {
-
+      .then( response => response.json() )
+      .then(user => {
         // On successful login + store user
         // Set user info on state
-        var onboardState = user.newUser;
+        let onboardState = user.newUser;
         this.setState({
-          selectedTab: 'inbox',
+          user: user,
           auth: true,
           token: token,
           profile: profile,
-          user: user,
+          selectedTab: 'inbox',
           onboard: onboardState,
         });
-      }).bind(this))
-      .catch(function (err) {
-        console.warn(err);
-      });
-    }).bind(this));
-  },
-  resetToTabs: function (badge) {
-    fetch(process.env.SERVER + '/user/' + this.state.user.email, {
+      })
+      .catch( err => console.warn(err) );
+    });
+  }
+
+  resetToTabs (badge) {
+    fetch(`${process.env.SERVER}/user/${this.state.user.email}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + this.state.token.idToken,
+          'Authorization': `Bearer ${this.state.token.idToken}`,
         },
       })
       .then(api.handleErrors)
-      .then(function (response) {
-        return response.json();
-      })
-      .then((function (response) {
+      .then( response => response.json() )
+      .then(response => {
         this.setState({
-          user: response.user,
-          onboard: false,
           badge: badge,
-        })
-      }).bind(this))
-      .catch(function (err) {
-        console.warn(err);
-      });
-  },
-  componentDidMount: function () {
+          onboard: false,
+          user: response.user,
+        });
+      })
+      .catch( err => console.warn(err) );
+  }
 
+  componentDidMount () {
     // If user not logged in
     if (!this.state.auth) {
       this.showLock();
     }
-  },
+  }
 
-  render: function () {
+  render () {
     if (this.state.auth) {
       if (this.state.onboard === true) {
         return (
           <AppContainer
+            onboard={true}
+            user={this.state.user}
             token={this.state.token}
             profile={this.state.profile}
-            user={this.state.user}
             resetToTabs={this.resetToTabs}
-            onboard={true}
           />
         )
       } else {
         return (
           <TabBarIOS
             tintColor='#6399DC'
-            transluscent={false}
             barTintColor='#fff'
+            transluscent={false}
             selectedTab={this.state.selectedTab}
           >
             <Icon.TabBarItemIOS
-              selected={this.state.selectedTab === 'inbox'}
+              iconSize={30}
               title='Habits'
               iconName='mountains'
-              iconSize={30}
-              onPress={(function () {
-                this.setState({
-                  selectedTab: 'inbox',
-                });
-              }).bind(this)}
+              selected={this.state.selectedTab === 'inbox'}
+              onPress={ () => this.setState({ selectedTab: 'inbox' }) }
             >
               <AppContainer
-                token={this.state.token}
-                profile={this.state.profile}
                 user={this.state.user}
                 badge={this.state.badge}
+                token={this.state.token}
+                profile={this.state.profile}
               />
             </Icon.TabBarItemIOS>
             <Icon.TabBarItemIOS
-              selected={this.state.selectedTab === 'profile'}
+              iconSize={30}
               title='Profile'
               iconName='torso'
-              iconSize={30}
-              onPress={(function () {
-                this.setState({
-                  selectedTab: 'profile',
-                });
-              }).bind(this)}
+              selected={this.state.selectedTab === 'profile'}
+              onPress={ () => this.setState({ selectedTab: 'profile' }) }
             >
               <ProfileContainer
+                user={this.state.user}
                 token={this.state.token}
                 profile={this.state.profile}
-                user={this.state.user}
                 handleLogout={this.handleLogout}
               />
             </Icon.TabBarItemIOS>
@@ -191,8 +178,6 @@ var TabContainer = React.createClass({
       );
     }
   }
-});
+};
 
-AppRegistry.registerComponent('thesis', function () {
-  return TabContainer;
-});
+AppRegistry.registerComponent('thesis', () => TabContainer);

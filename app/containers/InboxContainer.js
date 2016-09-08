@@ -3,14 +3,16 @@
 import React, {
   View,
   Text,
+  Image,
   Alert,
   Linking,
   ListView,
+  Component,
   Navigator,
+  PropTypes,
+  Dimensions,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  Dimensions,
 } from 'react-native';
 // External libraries and components
 import moment from 'moment';
@@ -21,27 +23,35 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Inbox from '../components/Inbox';
 import Notification from '../components/Notification';
 
-
-const Habits = React.createClass({
-  getInitialState () {
-    return {
+export default class Habits extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      badge: {},
+      alert: false,
+      scrollEnabled: true,
       dataSource: new ListView.DataSource({
         rowHasChanged (row1, row2) {
           return row1 !== row2;
         },
       }),
-      scrollEnabled: true,
-      alert: false,
-      badge: {},
     };
-  },
-
+    this.getHabits = this.getHabits.bind(this);
+    this.editHabit = this.editHabit.bind(this);
+    this.showAlert = this.showAlert.bind(this);
+    this.gotoDetails = this.gotoDetails.bind(this);
+    this.handlePress = this.handlePress.bind(this);
+    this.allowScroll = this.allowScroll.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.renderInboxRow = this.renderInboxRow.bind(this);
+    this.toggleInstance = this.toggleInstance.bind(this);
+  }
   // TODO: refactor server call to api library
   getHabits () {
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
     })
     .then(api.handleErrors)
@@ -52,28 +62,20 @@ const Habits = React.createClass({
       });
     })
     .catch( (err) => console.warn(err) );
-  },
+  }
 
   editHabit (habit) {
-    this.props.navigator.push({
-      id: 'HabitSettings',
-      habit: habit,
-    });
-  },
+    this.props.navigator.push({ id: 'HabitSettings', habit: habit });
+  }
 
   showAlert (badge) {
     setTimeout( () => {
-      this.setState({
-        alert: true,
-        badge: badge,
-      });
+      this.setState({ alert: true, badge: badge });
     }, 500);
     setTimeout( () => {
-      this.setState({
-        alert: false,
-      });
+      this.setState({ alert: false });
     }, 3200);
-  },
+  }
 
   toggleInstance (habitId) {
     // TODO: refactor server call to api library
@@ -81,57 +83,53 @@ const Habits = React.createClass({
     fetch(`${process.env.SERVER}/habits/${this.props.profile.email}/${habitId}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.props.token.idToken}`
+        'Authorization': `Bearer ${this.props.token.idToken}`,
       },
     })
     .then(api.handleErrors)
-    .then( (response) => response.json() )
-    .then( (res) => {
+    .then( response => response.json() )
+    .then(res => {
       if (res.badges && res.badges.length) {
         this.showAlert(res.badges[0]);
       }
       this.getHabits();
     })
-    .catch( (err) => console.warn(err) );
-  },
+    .catch( err => console.warn(err) );
+  }
 
   gotoDetails (habit) {
-    this.props.navigator.push({
-      id: 'HabitDetails',
-      habit: habit,
-    });
-  },
+    this.props.navigator.push({ id: 'HabitDetails', habit: habit });
+  }
 
   componentDidMount () {
     if (this.props.route.badge) {
       this.showAlert(this.props.route.badge);
     }
     this.getHabits();
-  },
+  }
 
   handlePress () {
     this.props.navigator.push({ id:'AddHabit' });
-  },
+  }
 
   allowScroll (scrollEnabled) {
     if (scrollEnabled !== this.state.scrollEnabled) {
       this.setState({ scrollEnabled: scrollEnabled });
     }
-  },
+  }
 
   // Render each row of the inbox as an Inbox component
   renderInboxRow (habit) {
     return (
       <Inbox
         habit={habit}
-        deleteHabit={this.deleteHabit}
-        gotoDetails={this.gotoDetails}
         editHabit={this.editHabit}
-        toggleInstance={this.toggleInstance}
+        gotoDetails={this.gotoDetails}
         allowScroll={this.allowScroll}
+        toggleInstance={this.toggleInstance}
       />
     );
-  },
+  }
 
   render () {
     return (
@@ -148,16 +146,16 @@ const Habits = React.createClass({
         />
       </View>
     );
-  },
+  }
 
   renderScene (route, navigator) {
     return (
       <View style={styles.container}>
         <ListView
-          dataSource={this.state.dataSource}
           renderRow={this.renderInboxRow}
-          automaticallyAdjustContentInsets={false}
+          dataSource={this.state.dataSource}
           scrollEnabled={this.state.scrollEnabled}
+          automaticallyAdjustContentInsets={false}
         />
         <Notification
           visible={this.state.alert}
@@ -165,13 +163,27 @@ const Habits = React.createClass({
           icon={this.state.badge ? this.state.badge.icon : null}
         >
         </Notification>
-        <TouchableOpacity style={styles.circleButton} onPress={this.handlePress}>
-          <Icon name='plus' size={25} color='#ffffff' />
+        <TouchableOpacity
+          style={styles.circleButton}
+          onPress={this.handlePress}
+        >
+          <Icon
+            size={25}
+            name='plus'
+            color='#ffffff'
+          />
         </TouchableOpacity>
       </View>
     );
   }
-});
+}
+
+Habits.PropTypes = {
+  route: PropTypes.object,
+  token: PropTypes.object,
+  profile: PropTypes.object,
+  navigator: PropTypes.object,
+};
 
 const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
@@ -218,5 +230,3 @@ const styles = StyleSheet.create({
     },
   },
 });
-
-module.exports = Habits;

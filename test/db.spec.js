@@ -93,7 +93,7 @@ describe('Database', function () {
           done();
         })
         .catch(function (err) {
-          console.error('DbSpec afterEach error:', err);
+          console.error('db.spec afterEach error:', err);
         });
     });
 
@@ -117,7 +117,7 @@ describe('Database', function () {
             done();
           })
           .catch(function (fail) {
-            console.error('DbSpec getHabits error:', fail);
+            console.error('db.spec getHabits error:', fail);
           });
       });
     });
@@ -139,7 +139,7 @@ describe('Database', function () {
             done();
           })
           .catch(function (fail) {
-            console.error('DbSpec addHabit error:', fail);
+            console.error('db.spec addHabit error:', fail);
           });
       });
 
@@ -147,7 +147,7 @@ describe('Database', function () {
         var habit3 = {};
         helpers.addHabit(user.email, habit3)
           .then(function (success) {
-            console.log('DbSpec addHabit success:', success);
+            console.log('db.spec addHabit success:', success);
           })
           .catch(function (fail) {
             expect(fail).to.exist;
@@ -177,14 +177,14 @@ describe('Database', function () {
             done();
           })
           .catch(function (fail) {
-            console.error('DbSpec deleteHabit error:', fail);
+            console.error('db.spec deleteHabit error:', fail);
           });
       });
 
       it('should error when attempting to delete invalid ID', function (done) {
         helpers.deleteHabit(user.email, '12345')
           .then(function (success) {
-            console.log('DbSpec deleteHabit success:', success);
+            console.log('db.spec deleteHabit success:', success);
           })
           .catch(function (fail) {
             expect(fail).to.exist;
@@ -211,7 +211,7 @@ describe('Database', function () {
             done();
           })
           .catch(function (fail) {
-            console.error('DbSpec updateHabit error:', fail);
+            console.error('db.spec updateHabit error:', fail);
           });
       });
 
@@ -223,7 +223,7 @@ describe('Database', function () {
         };
         helpers.updateHabit(user.email, '12345', update1)
           .then(function (success) {
-            console.log('DbSpec updateHabit success:', success);
+            console.log('db.spec updateHabit success:', success);
           })
           .catch(function (fail) {
             expect(fail).to.exist;
@@ -252,7 +252,7 @@ describe('Database', function () {
       it('should error when attempting to create instance on non-existent habit', function (done) {
         helpers.toggleInstance(user.email, '12345')
           .then(function (success) {
-            console.log('DbSpec toggleInstance success:', success);
+            console.log('db.spec toggleInstance success:', success);
           })
           .catch(function (fail) {
             expect(fail).to.exist;
@@ -274,7 +274,7 @@ describe('Database', function () {
             done();
           })
           .catch(function (err) {
-            console.log('DbSpec toggleInstance error:', err);
+            console.log('db.spec toggleInstance error:', err);
           });
       });
 
@@ -289,7 +289,7 @@ describe('Database', function () {
             done();
           })
           .catch(function (err) {
-            console.log('DbSpec toggleInstance error:', err);
+            console.log('db.spec toggleInstance error:', err);
           });
       });
     });

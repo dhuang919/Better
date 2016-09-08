@@ -1,6 +1,7 @@
 'use strict';
 // React Native components
 import React, {
+  Component,
   Text,
   View,
   Navigator,
@@ -15,19 +16,22 @@ import HabitDetails from '../components/HabitDetails';
 import HabitSettings from '../components/HabitSettings';
 import InstanceHistory from '../components/InstanceHistory';
 
-const AppContainer = React.createClass({
-  getInitialState () {
-    return {
+export default class AppContainer extends Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      user: this.props.user,
       token: this.props.token,
       profile: this.props.profile,
-      user: this.props.user,
       resetToTabs: this.props.resetToTabs,
     };
-  },
+    this.renderScene = this.renderScene.bind(this);
+    this.configureScene = this.configureScene.bind(this);
+  }
 
   configureScene (route, routeStack) {
     return Navigator.SceneConfigs.FadeAndroid;
-  },
+  }
 
   render () {
     return (
@@ -39,7 +43,7 @@ const AppContainer = React.createClass({
         />
       </View>
     );
-  },
+  }
 
   renderScene (route, navigator) {
     switch (route.id) {
@@ -47,10 +51,10 @@ const AppContainer = React.createClass({
         return (
           <LoadingContainer
             navigator={navigator}
-            token={this.state.token}
-            profile={this.state.profile}
             user={this.state.user}
+            token={this.state.token}
             badge={this.props.badge}
+            profile={this.state.profile}
           />
         );
       case 'Onboard':
@@ -62,8 +66,8 @@ const AppContainer = React.createClass({
       case 'AddHabit':
         return (
           <AddHabit
+          habit={route.habit}
             navigator={navigator}
-            habit={route.habit}
             token={this.state.token}
             profile={this.state.profile}
             onboard={this.props.onboard}
@@ -73,43 +77,41 @@ const AppContainer = React.createClass({
       case 'Habits':
         return (
           <Habits
+            route={route}
             navigator={navigator}
             token={this.state.token}
             profile={this.state.profile}
-            route={route}
           />
         );
       case 'HabitSettings':
         return (
           <HabitSettings
+            habit={route.habit}
             navigator={navigator}
+            user={this.state.user}
             token={this.state.token}
             profile={this.state.profile}
-            habit={route.habit}
-            user={this.state.user}
           />
         );
       case 'HabitDetails':
         return (
           <HabitDetails
+            habit={route.habit}
             navigator={navigator}
             token={this.state.token}
             profile={this.state.profile}
-            habit={route.habit}
           />
         );
       case 'InstanceHistory':
         return (
           <InstanceHistory
+            habit={route.habit}
             navigator={navigator}
             token={this.state.token}
-            profile={this.state.profile}
-            habit={route.habit}
             instances={route.instances}
+            profile={this.state.profile}
           />
         );
     }
   }
-});
-
-module.exports = AppContainer;
+}

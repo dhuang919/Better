@@ -1,5 +1,5 @@
 {
-  "name": "thesis",
+  "name": "Better",
   "version": "0.1.0",
   "private": true,
   "description": "Build better habits",
@@ -9,15 +9,6 @@
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hrr12-thundercats/thesis.git"
-  },
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/hrr12-thundercats/thesis/issues"
-  },
-  "homepage": "https://github.com/hrr12-thundercats/thesis#readme",
   "dependencies": {
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",

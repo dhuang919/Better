@@ -59,9 +59,6 @@
       "lcov",
       "text-summary"
     ],
-    "scripts": {
-      "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov"
-    },
     "check-coverage": true,
     "report-dir": "./coverage"
   }

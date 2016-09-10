@@ -14,7 +14,9 @@ import {
   SubmitButton,
 } from '../../app/components/Create';
 // Create container
-import CreateContainer, { NavigationBarRouteMapper } from '../../app/containers/CreateContainer';
+import CreateContainer, {
+  NavigationBarRouteMapper
+} from '../../app/containers/CreateContainer';
 // Custom components
 import Button from 'react-native-button';
 // Testing dependencies

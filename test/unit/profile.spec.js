@@ -8,14 +8,18 @@ import React, {
   Navigator,
 } from 'react-native';
 // Profile component
-import Profile, { NavigationBarRouteMapper } from '../../app/components/Profile';
+import Profile, {
+  NavigationBarRouteMapper as profileNavigationBarRouteMapper,
+} from '../../app/components/Profile';
 // Profile container
 import ProfileContainer from '../../app/containers/ProfileContainer';
 // Custom components
 import Button from 'react-native-button';
 import badges from '../../app/lib/badges';
 import ProgressBar from 'react-native-progress-bar';
-import BadgeView from '../../app/components/BadgeView';
+import BadgeView, {
+  NavigationBarRouteMapper as badgeNavigationBarRouteMapper,
+} from '../../app/components/BadgeView';
 // Testing dependencies
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -42,8 +46,8 @@ const profileContainerWrapper = shallow(
 );
 const badgeViewWrapper = shallow(
   <BadgeView
-    navigator={{}}
-    earnedBadges={{}}
+    earnedBadges={[]}
+    navigator={{ push: function() {} }}
   />
 );
 
@@ -91,30 +95,30 @@ describe('Profile Container', () => {
       expect(profileWrapper.find(Navigator)).to.have.length(1);
     });
 
-    describe('Navigation Bar Route Mapper', () => {
+    describe('Profile Navigation Bar Route Mapper', () => {
       it('should be an object with 3 methods', () => {
-        expect(NavigationBarRouteMapper).to.be.an('object');
-        expect(NavigationBarRouteMapper.LeftButton).to.be.a('function');
-        expect(NavigationBarRouteMapper.RightButton).to.be.a('function');
-        expect(NavigationBarRouteMapper.Title).to.be.a('function');
+        expect(profileNavigationBarRouteMapper).to.be.an('object');
+        expect(profileNavigationBarRouteMapper.LeftButton).to.be.a('function');
+        expect(profileNavigationBarRouteMapper.RightButton).to.be.a('function');
+        expect(profileNavigationBarRouteMapper.Title).to.be.a('function');
       });
 
       describe('LeftButton', () => {
         it('should return null', () => {
-          expect(NavigationBarRouteMapper.LeftButton()).to.be.null;
+          expect(profileNavigationBarRouteMapper.LeftButton()).to.be.null;
         });
       });
 
       describe('RightButton', () => {
         it('should return null', () => {
-          expect(NavigationBarRouteMapper.RightButton()).to.be.null;
+          expect(profileNavigationBarRouteMapper.RightButton()).to.be.null;
         });
       });
 
       describe('Title', () => {
         let wrapper;
         before(() => {
-          wrapper = shallow(<NavigationBarRouteMapper.Title />);
+          wrapper = shallow(<profileNavigationBarRouteMapper.Title />);
         });
 
         it('should return a TouchableOpacity component', () => {
@@ -291,6 +295,99 @@ describe('Profile Container', () => {
   });
 
   describe('BadgeView component', () => {
+    it('should render 1 Navigator component', () => {
+      expect(badgeViewWrapper.find(Navigator)).to.have.length(1);
+    });
 
+    it('should have initial state', () => {
+      let dataSource = new ListView.DataSource({
+        rowHasChanged (row1, row2) {
+          return row1 !== row2;
+        }
+      });
+      expect(badgeViewWrapper.state()).to.eql({ dataSource });
+    });
+
+    describe('Badge Navigation Bar Route Mapper', () => {
+      it('should be an object with 3 methods', () => {
+        expect(badgeNavigationBarRouteMapper).to.be.an('object');
+        expect(badgeNavigationBarRouteMapper.LeftButton).to.be.a('function');
+        expect(badgeNavigationBarRouteMapper.RightButton).to.be.a('function');
+        expect(badgeNavigationBarRouteMapper.Title).to.be.a('function');
+      });
+
+      describe('LeftButton', () => {
+        let wrapper;
+        before(() => {
+          wrapper = shallow(<badgeNavigationBarRouteMapper.LeftButton />);
+        });
+
+        it('should return a TouchableOpacity component', () => {
+          expect(wrapper.find('TouchableOpacity')).to.have.length(1);
+        });
+
+        it('should return 1 nested Text component', () => {
+          expect(wrapper.find(Text)).to.have.length(1);
+        });
+
+        it('should render a Text component which reads "Back"', () => {
+          expect(wrapper.find(Text).children().node).to.equal('Back');
+        });
+      });
+
+      describe('RightButton', () => {
+        it('should return null', () => {
+          expect(badgeNavigationBarRouteMapper.RightButton()).to.be.null;
+        });
+      });
+
+      describe('Title', () => {
+        let wrapper;
+        before(() => {
+          wrapper = shallow(<badgeNavigationBarRouteMapper.Title />);
+        });
+
+        it('should return a TouchableOpacity component', () => {
+          expect(wrapper.find('TouchableOpacity')).to.have.length(1);
+        });
+
+        it('should return 1 nested Text component', () => {
+          expect(wrapper.find(Text)).to.have.length(1);
+        });
+
+        it('should render a Text component which reads "All Badges"', () => {
+          expect(wrapper.find(Text).children().node).to.equal('All Badges');
+        });
+      });
+    });
+
+    describe('Methods', () => {
+      let earnedBadges = [
+        { 'First Step': 'foo' },
+        { 'Better Already': 'bar' },
+        { 'Top of the World': 'baz' },
+        { 'Gone Streaking': 'foobar' },
+      ];
+      let fullBadgeViewWrapper = mount(
+        <BadgeView
+          earnedBadges={earnedBadges}
+          navigator={{ push: function() {} }}
+        />
+      );
+      it('should have a renderRow method', () => {
+        let rowData = {
+          earned: true,
+        };
+        fullBadgeViewWrapper.node.renderRow(rowData);
+        rowData.earned = false;
+        fullBadgeViewWrapper.node.renderRow(rowData);
+        expect(fullBadgeViewWrapper.node.renderRow).to.be.a('function');
+      });
+
+      it('should have a renderScene method', () => {
+        fullBadgeViewWrapper.node.renderScene();
+        expect(fullBadgeViewWrapper.node.renderScene).to.be.a('function');
+      });
+    });
   });
 });

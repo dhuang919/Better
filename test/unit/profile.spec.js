@@ -136,51 +136,54 @@ describe('Profile Container', () => {
     });
 
     describe('Methods', () => {
-      let mockUser = {
-        badges: [
-          badges['First Step'],
-          badges['Better Already'],
-          badges['Top of the World'],
-        ],
-        email: 'foo@bar.com',
-        newUser: false,
-        userName: 'foo',
-      };
-      let mockProfile = {
-        email: 'foo@bar.com',
-        name: 'foo@bar.com',
-        nickanme: 'foo',
-        picture: 'foobarbaz',
-      };
-      fetchMock.get(/\/user/, {
-        body: {
-          user: mockUser,
-          habits: [
-            {
-              action: 'Foo',
-              streak: { current: 1 }
-            },
-            {
-              action: 'Bar',
-              streak: { current: 1 }
-            },
-            {
-              action: 'Baz',
-              streak: { current: 1 }
-            },
+      let fullProfileWrapper;
+      before(() => {
+        let mockUser = {
+          badges: [
+            badges['First Step'],
+            badges['Better Already'],
+            badges['Top of the World'],
           ],
-        }
-      });
-      let fullProfileWrapper = mount(
-        <Profile
+          email: 'foo@bar.com',
+          newUser: false,
+          userName: 'foo',
+        };
+        let mockProfile = {
+          email: 'foo@bar.com',
+          name: 'foo@bar.com',
+          nickanme: 'foo',
+          picture: 'foobarbaz',
+        };
+        fetchMock.get(/\/user/, {
+          body: {
+            user: mockUser,
+            habits: [
+              {
+                action: 'Foo',
+                streak: { current: 1 }
+              },
+              {
+                action: 'Bar',
+                streak: { current: 1 }
+              },
+              {
+                action: 'Baz',
+                streak: { current: 1 }
+              },
+            ],
+          }
+        });
+        fullProfileWrapper = mount(
+          <Profile
           token={{}}
           badgeURIs={{}}
           user={mockUser}
           profile={mockProfile}
           handleLogout={() => {}}
           navigator={{ push: function() {} }}
-        />
-      );
+          />
+        );
+      });
 
       after(() => {
         fetchMock.restore();
@@ -266,7 +269,6 @@ describe('Profile Container', () => {
 
       it('refreshUserData should log errors', () => {
         let mockError = new Error('foo');
-        fetchMock.restore();
         fetchMock.get(/\/user/, { throws: mockError });
       });
 

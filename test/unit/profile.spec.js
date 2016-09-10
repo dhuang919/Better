@@ -152,9 +152,18 @@ describe('Profile Container', () => {
         body: {
           user: mockUser,
           habits: [
-            badges['First Step'],
-            badges['Better Already'],
-            badges['Top of the World'],
+            {
+              action: 'Foo',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Bar',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Baz',
+              streak: { current: 1 }
+            },
           ],
         }
       });
@@ -174,7 +183,11 @@ describe('Profile Container', () => {
       });
 
       it('should have a renderRow method', () => {
-        fullProfileWrapper.node.renderRow();
+        let badges = {
+          uri: 'foobarbaz',
+          name: 'foo',
+        };
+        fullProfileWrapper.node.renderRow(badges);
         expect(fullProfileWrapper.node.renderRow).to.be.a('function');
       });
 
@@ -184,12 +197,61 @@ describe('Profile Container', () => {
       });
 
       it('should have a renderScene method', () => {
+        fullProfileWrapper.state().currentStreakHabit = null;
         fullProfileWrapper.node.renderScene();
         expect(fullProfileWrapper.node.renderScene).to.be.a('function');
       });
 
       it('should have a parseUserData method', () => {
-        fullProfileWrapper.node.parseUserData();
+        let newData = {
+          user: {
+            badges: [
+              badges['First Step'],
+              badges['Better Already'],
+              badges['Top of the World'],
+            ],
+          },
+          habits: [
+            {
+              action: 'Foo',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Bar',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Baz',
+              streak: { current: 1 }
+            },
+          ],
+        };
+        fullProfileWrapper.node.parseUserData(newData);
+        let newerData = {
+          user: {
+            badges: [
+              { 'First Step': 'foo' },
+              { 'Better Already': 'bar' },
+              { 'Top of the World': 'baz' },
+              { 'Gone Streaking': 'foobar' },
+            ],
+          },
+          habits: [
+            {
+              action: 'Foo',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Bar',
+              streak: { current: 1 }
+            },
+            {
+              action: 'Baz',
+              streak: { current: 1 }
+            },
+          ],
+        };
+        fullProfileWrapper.node.parseUserData(newerData);
         expect(fullProfileWrapper.node.parseUserData).to.be.a('function');
       });
 
@@ -198,12 +260,30 @@ describe('Profile Container', () => {
         expect(fullProfileWrapper.node.refreshUserData).to.be.a('function');
       });
 
+      it('refreshUserData should log errors', () => {
+        let mockError = new Error('foo');
+        fetchMock.restore();
+        fetchMock.get(/\/user/, { throws: mockError });
+      });
+
       it('should have a calculateProgress method', () => {
-        let earned = 0;
         let userHabits = [
-          
+          {
+            action: 'Foo',
+            streak: { current: 1 }
+          },
+          {
+            action: 'Bar',
+            streak: { current: 1 }
+          },
+          {
+            action: 'Baz',
+            streak: { current: 1 }
+          },
         ];
-        fullProfileWrapper.node.calculateProgress(earned, userHabits);
+        fullProfileWrapper.node.calculateProgress(0, userHabits);
+        fullProfileWrapper.node.calculateProgress(1, userHabits);
+        fullProfileWrapper.node.calculateProgress(2, userHabits);
         fullProfileWrapper.node.componentWillReceiveProps();
         expect(fullProfileWrapper.node.calculateProgress).to.be.a('function');
       });

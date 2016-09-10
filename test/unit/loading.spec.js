@@ -14,52 +14,57 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 // Wrappers
-const componentWrapper = shallow(<Loading />);
+const loadingWrapper = shallow(<Loading />);
+const loadingContainerWrapper = shallow(<LoadingContainer />);
 
 describe('Loading Container', () => {
   it('shoulder render 1 View component', () => {
-    const containerWrapper = shallow(<LoadingContainer />);
-    expect(containerWrapper.find(View)).to.have.length(1);
+    expect(loadingContainerWrapper.find(View)).to.have.length(1);
   });
 
   it('should render 1 Navigator component', () => {
-    const containerWrapper = shallow(<LoadingContainer />);
-    expect(containerWrapper.find(Navigator)).to.have.length(1);
+    expect(loadingContainerWrapper.find(Navigator)).to.have.length(1);
   });
 
-  it('should invoke goToOnboard if the user is new', () => {
-    let mockUser = { newUser: true };
-    let mockNavigator = { push: function() {} };
-    const containerWrapper = mount(
-      <LoadingContainer
-        user={mockUser}
-        navigator={mockNavigator}
-      />
-    );
-  });
+  describe('Methods', () => {
+    it('should have a goToOnboard method', () => {
+      
+    });
 
-  it('should invoke goToInbox if the user exists', () => {
-    let mockUser = { newUser: false };
-    let mockNavigator = { push: function() {} };
-    const containerWrapper = mount(
-      <LoadingContainer
+    it('should invoke goToOnboard if the user is new', () => {
+      let mockUser = { newUser: true };
+      let mockNavigator = { push: function() {} };
+      const fullContainerWrapper = mount(
+        <LoadingContainer
         user={mockUser}
         navigator={mockNavigator}
-      />
-    );
+        />
+      );
+    });
+
+    it('should invoke goToInbox if the user exists', () => {
+      let mockUser = { newUser: false };
+      let mockNavigator = { push: function() {} };
+      const fullContainerWrapper = mount(
+        <LoadingContainer
+        user={mockUser}
+        navigator={mockNavigator}
+        />
+      );
+    });
   });
 
   describe('Loading component', () => {
     it('should render 1 View component', () => {
-      expect(componentWrapper.find(View)).to.have.length(1);
+      expect(loadingWrapper.find(View)).to.have.length(1);
     });
 
     it('should render 1 Text component', () => {
-      expect(componentWrapper.find(Text)).to.have.length(1);
+      expect(loadingWrapper.find(Text)).to.have.length(1);
     });
 
     it('should render "BETTER." as a child of Text', () => {
-      expect(componentWrapper.find(Text).children().node).to.equal('BETTER.');
+      expect(loadingWrapper.find(Text).children().node).to.equal('BETTER.');
     });
   });
 });

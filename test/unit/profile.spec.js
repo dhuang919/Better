@@ -319,11 +319,17 @@ describe('Profile Container', () => {
       describe('LeftButton', () => {
         let wrapper;
         before(() => {
-          wrapper = shallow(<badgeNavigationBarRouteMapper.LeftButton />);
+          let mockNavigator = {
+            parentNavigator: { pop: function() {} },
+          };
+          let LeftButton = () => badgeNavigationBarRouteMapper.LeftButton({}, mockNavigator)
+          wrapper = shallow(<LeftButton />);
         });
 
-        it('should return a TouchableOpacity component', () => {
+        it('should return a TouchableOpacity component with an onPress callback', () => {
           expect(wrapper.find('TouchableOpacity')).to.have.length(1);
+          wrapper.find('TouchableOpacity').props().onPress();
+          expect(wrapper.find('TouchableOpacity').props().onPress).to.be.a('function');
         });
 
         it('should return 1 nested Text component', () => {

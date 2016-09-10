@@ -28,27 +28,50 @@ describe('Loading Container', () => {
 
   describe('Methods', () => {
     it('should have a goToOnboard method', () => {
-      
+      const fullLoadingContainerWrapper = mount(
+        <LoadingContainer
+          user={{}}
+          navigator={{ push: function() {} }}
+        />
+      );
+      expect(fullLoadingContainerWrapper.node.goToOnboard).to.be.a('function');
     });
 
-    it('should invoke goToOnboard if the user is new', () => {
-      let mockUser = { newUser: true };
-      let mockNavigator = { push: function() {} };
-      const fullContainerWrapper = mount(
+    it('should have a goToInbox method', () => {
+      const fullLoadingContainerWrapper = mount(
         <LoadingContainer
-        user={mockUser}
-        navigator={mockNavigator}
+          user={{}}
+          navigator={{ push: function() {} }}
+        />
+      );
+      expect(fullLoadingContainerWrapper.node.goToInbox).to.be.a('function');
+    });
+
+    it('should have a renderScene method', () => {
+      const fullLoadingContainerWrapper = mount(
+        <LoadingContainer
+          user={{}}
+          navigator={{ push: function() {} }}
+        />
+      );
+      fullLoadingContainerWrapper.node.renderScene();
+      expect(fullLoadingContainerWrapper.node.renderScene).to.be.a('function');
+    });
+
+    it('should invoke goToOnboard upon mount if the user is new', () => {
+      mount(
+        <LoadingContainer
+          user={{ newUser: true }}
+          navigator={{ push: function() {} }}
         />
       );
     });
 
-    it('should invoke goToInbox if the user exists', () => {
-      let mockUser = { newUser: false };
-      let mockNavigator = { push: function() {} };
-      const fullContainerWrapper = mount(
+    it('should invoke goToInbox upon mount if the user exists', () => {
+      mount(
         <LoadingContainer
-        user={mockUser}
-        navigator={mockNavigator}
+          user={{ newUser: false }}
+          navigator={{ push: function() {} }}
         />
       );
     });

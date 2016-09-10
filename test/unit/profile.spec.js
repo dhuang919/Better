@@ -13,11 +13,13 @@ import Profile, { NavigationBarRouteMapper } from '../../app/components/Profile'
 import ProfileContainer from '../../app/containers/ProfileContainer';
 // Custom components
 import Button from 'react-native-button';
+import badges from '../../app/lib/badges';
 import ProgressBar from 'react-native-progress-bar';
 import BadgeView from '../../app/components/BadgeView';
 // Testing dependencies
 import sinon from 'sinon';
 import { expect } from 'chai';
+import fetchMock from 'fetch-mock';
 import { shallow, mount } from 'enzyme';
 // Wrappers
 const profileWrapper = shallow(
@@ -47,19 +49,46 @@ const badgeViewWrapper = shallow(
 
 describe('Profile Container', () => {
 
-  describe('Methods', () => {
-    it('should have a configureScene method', () => {
+  it('should render 1 View component', () => {
+    expect(profileContainerWrapper.find(View)).to.have.length(1);
+  });
 
+  it('should render 1 Navigator component', () => {
+    expect(profileContainerWrapper.find(Navigator)).to.have.length(1);
+  });
+
+  describe('Methods', () => {
+    it('should have a configureScene method that returns a function', () => {
+      let fullContainerWrapper = mount(
+        <ProfileContainer
+          user={{}}
+          token={{}}
+          profile={{}}
+          handleLogout={() => {}}
+        />
+      );
+      expect(fullContainerWrapper.node.configureScene).to.be.a('function');
+      expect(fullContainerWrapper.node.configureScene()).to.be.a('function');
     });
 
-    it('should have a renderScene method', () => {
-
+    it('should have a renderScene method which returns a component', () => {
+      let fullContainerWrapper = mount(
+        <ProfileContainer
+          user={{}}
+          token={{}}
+          profile={{}}
+          handleLogout={() => {}}
+        />
+      );
+      fullContainerWrapper.node.renderScene({ id: 'Profile' });
+      fullContainerWrapper.node.renderScene({ id: 'Badges' });
+      expect(fullContainerWrapper.node.renderScene).to.be.a('function');
     });
   });
 
   describe('Profile component', () => {
-    it('should render  View components', () => {
-
+    it('should render 1 Navigator component', () => {
+      expect(profileWrapper.find(Navigator)).to.have.length(1);
     });
 
     describe('Navigation Bar Route Mapper', () => {
@@ -103,28 +132,80 @@ describe('Profile Container', () => {
     });
 
     describe('Methods', () => {
-      it('should have a renderRow method', () => {
+      let mockUser = {
+        badges: [
+          badges['First Step'],
+          badges['Better Already'],
+          badges['Top of the World'],
+        ],
+        email: 'foo@bar.com',
+        newUser: false,
+        userName: 'foo',
+      };
+      let mockProfile = {
+        email: 'foo@bar.com',
+        name: 'foo@bar.com',
+        nickanme: 'foo',
+        picture: 'foobarbaz',
+      };
+      fetchMock.get(/\/user/, {
+        body: {
+          user: mockUser,
+          habits: [
+            badges['First Step'],
+            badges['Better Already'],
+            badges['Top of the World'],
+          ],
+        }
+      });
+      let fullProfileWrapper = mount(
+        <Profile
+          token={{}}
+          badgeURIs={{}}
+          user={mockUser}
+          profile={mockProfile}
+          handleLogout={() => {}}
+          navigator={{ push: function() {} }}
+        />
+      );
 
+      after(() => {
+        fetchMock.restore();
+      });
+
+      it('should have a renderRow method', () => {
+        fullProfileWrapper.node.renderRow();
+        expect(fullProfileWrapper.node.renderRow).to.be.a('function');
       });
 
       it('should have a goToBadges method', () => {
-
+        fullProfileWrapper.node.goToBadges();
+        expect(fullProfileWrapper.node.goToBadges).to.be.a('function');
       });
 
       it('should have a renderScene method', () => {
-
+        fullProfileWrapper.node.renderScene();
+        expect(fullProfileWrapper.node.renderScene).to.be.a('function');
       });
 
       it('should have a parseUserData method', () => {
-
+        fullProfileWrapper.node.parseUserData();
+        expect(fullProfileWrapper.node.parseUserData).to.be.a('function');
       });
 
       it('should have a refreshUserData method', () => {
-
+        fullProfileWrapper.node.refreshUserData();
+        expect(fullProfileWrapper.node.refreshUserData).to.be.a('function');
       });
 
       it('should have a calculateProgress method', () => {
-
+        let earned = 0;
+        let userHabits = [
+          
+        ];
+        fullProfileWrapper.node.calculateProgress(earned, userHabits);
+        fullProfileWrapper.node.componentWillReceiveProps();
+        expect(fullProfileWrapper.node.calculateProgress).to.be.a('function');
       });
     });
   });

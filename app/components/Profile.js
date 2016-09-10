@@ -99,7 +99,7 @@ export default class Profile extends Component {
       // key-value pair, we can extract the badge name this way
       let badgeTitle = Object.keys(badge)[0];
 
-      // Conditional to ensure only the three badges most recent
+      // Conditional to ensure only the three most recent
       // badges are collected and rendered. The way earned badges
       // are stored in an array in the back-end ensures chronological order
       if (i >= badges.length - 3) {

@@ -12,16 +12,16 @@ var Join = require('bluebird').join;
 var moment = require('moment');
 
 // Server
-var app = require('../server/server');
+var app = require('../../server/server');
 
 // DB Models
 var mongoose = require('mongoose');
-var User = require('../db/models').User;
-var Habits = require('../db/models').Habits;
-var Instances = require('../db/models').Instances;
+var User = require('../../db/models').User;
+var Habits = require('../../db/models').Habits;
+var Instances = require('../../db/models').Instances;
 
 // Helper functions which query db
-var helpers = require('../server/helpers');
+var helpers = require('../../server/helpers');
 
 describe('Database', function () {
   describe('Helpers', function () {
@@ -89,12 +89,6 @@ describe('Database', function () {
         .catch(function (err) {
           console.error('db.spec afterEach error:', err);
         });
-    });
-
-    after(function (done) {
-      // Close DB connection after tests complete
-      mongoose.connection.close();
-      done();
     });
 
     describe('getHabits', function () {

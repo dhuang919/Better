@@ -9,13 +9,13 @@ var expect = require('chai').expect;
 var Join = require('bluebird').join;
 
 // Server
-var app = require('../server/server');
+var app = require('../../server/server');
 
 // DB Models
 var mongoose = require('mongoose');
-var User = require('../db/models').User;
-var Habits = require('../db/models').Habits;
-var Instances = require('../db/models').Instances;
+var User = require('../../db/models').User;
+var Habits = require('../../db/models').Habits;
+var Instances = require('../../db/models').Instances;
 
 describe('Basic Server', function () {
   // Example user

@@ -1,24 +1,15 @@
 {
-  "name": "thesis",
+  "name": "Better",
   "version": "0.1.0",
   "private": true,
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "pretest": "mocha test/server.spec.js; mocha test/db.spec.js",
-    "test": "mocha --require setup.js --compilers js:babel-core/register test/client.spec.js",
+    "pretest": "mocha test/integration/db.spec.js test/integration/server.spec.js",
+    "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/*.spec.js && cat ./coverage/lcov.info | coveralls",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hrr12-thundercats/thesis.git"
-  },
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/hrr12-thundercats/thesis/issues"
-  },
-  "homepage": "https://github.com/hrr12-thundercats/thesis#readme",
   "dependencies": {
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
@@ -46,14 +37,30 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "coveralls": "^2.11.12",
     "enzyme": "^2.1.0",
+    "fetch-mock": "^5.1.1",
     "jsdom": "^8.1.0",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
+    "nyc": "^8.1.0",
     "react-addons-test-utils": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-native-mock": "0.0.7",
     "request": "^2.69.0",
+    "sinon": "^1.17.5",
     "supertest": "^1.2.0"
+  },
+  "nyc": {
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 85,
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "check-coverage": true,
+    "report-dir": "./coverage"
   }
 }

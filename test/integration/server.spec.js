@@ -9,21 +9,19 @@ var expect = require('chai').expect;
 var Join = require('bluebird').join;
 
 // Server
-var app = require('../server/server');
+var app = require('../../server/server');
 
 // DB Models
 var mongoose = require('mongoose');
-var User = require('../db/models').User;
-var Habits = require('../db/models').Habits;
-var Instances = require('../db/models').Instances;
+var User = require('../../db/models').User;
+var Habits = require('../../db/models').Habits;
+var Instances = require('../../db/models').Instances;
 
 describe('Basic Server', function () {
-
   // Example user
   var user = {
     email: 'yolo@yolo.com'
   };
-
   // Example habits with habit1Id to be assigned in
   // beforeEach and used in habit PUT/DELETE
   var habit1Id;
@@ -35,11 +33,9 @@ describe('Basic Server', function () {
     action: 'Floss',
     frequency: 'Daily'
   };
-
   // Instance ID to be assigned in beforeEach
   // to habit1 and used in deleteHabit
   var instance1Id;
-
   beforeEach(function (done) {
     request(app)
       .post('/user')
@@ -74,7 +70,6 @@ describe('Basic Server', function () {
     var dropUser = User.remove({});
     var dropHabits = Habits.remove({});
     var dropInstances = Instances.remove({});
-
     // Promise.join coordinates a fixed number of promises concurrently
     Join(dropUser, dropHabits, dropInstances)
       .then(function (success) {
@@ -95,7 +90,6 @@ describe('Basic Server', function () {
   });
 
   describe('GET /habits/:user', function () {
-
     it('should return 200 on success', function (done) {
       request(app)
         .get('/habits/' + user.email)
@@ -127,7 +121,6 @@ describe('Basic Server', function () {
   });
 
   describe('POST /habits/:user', function () {
-
     // Habit to send in POST requests
     var habit3 = {
       action: 'Run',
@@ -178,11 +171,9 @@ describe('Basic Server', function () {
         })
         .end(done);
     });
-
   });
 
   describe('PUT /habits/:user/:habitid', function () {
-
     // Updates to be used in request
     var update1 = {
       action: 'Write BETTER tests',
@@ -214,11 +205,9 @@ describe('Basic Server', function () {
         })
         .end(done);
     });
-
   });
 
   describe('DELETE /habits/:user/:habitid', function () {
-
     it('should return 200 on success', function (done) {
       request(app)
         .delete('/habits/' + user.email + '/' + habit1Id)
@@ -257,7 +246,5 @@ describe('Basic Server', function () {
             .end(done);
         });
     });
-
   });
-
 });

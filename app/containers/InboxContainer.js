@@ -109,7 +109,7 @@ export default class Habits extends Component {
   }
 
   handlePress () {
-    this.props.navigator.push({ id:'AddHabit' });
+    this.props.navigator.push({ id:'CreateContainer' });
   }
 
   allowScroll (scrollEnabled) {

@@ -1,5 +1,6 @@
 # Better
-[![Build Status](https://travis-ci.org/betterhabits/Better.svg?branch=master)](https://travis-ci.org/betterhabits/Better)
+
+[![Build Status](https://travis-ci.org/betterhabits/Better.svg?branch=master)](https://travis-ci.org/betterhabits/Better) [![Coverage Status](https://coveralls.io/repos/github/betterhabits/Better/badge.svg?branch=master)](https://coveralls.io/github/betterhabits/Better?branch=master)
 
 > Get Better.  
 ![Better demo](https://cloud.githubusercontent.com/assets/13752714/15801337/c9b6feb4-2a5f-11e6-841a-6f8146c7c7a3.gif)

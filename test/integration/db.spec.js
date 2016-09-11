@@ -12,27 +12,24 @@ var Join = require('bluebird').join;
 var moment = require('moment');
 
 // Server
-var app = require('../server/server');
+var app = require('../../server/server');
 
 // DB Models
 var mongoose = require('mongoose');
-var User = require('../db/models').User;
-var Habits = require('../db/models').Habits;
-var Instances = require('../db/models').Instances;
+var User = require('../../db/models').User;
+var Habits = require('../../db/models').Habits;
+var Instances = require('../../db/models').Instances;
 
 // Helper functions which query db
-var helpers = require('../server/helpers');
+var helpers = require('../../server/helpers');
 
 describe('Database', function () {
-
   describe('Helpers', function () {
-
     // Example user
     var user = {
       email: 'yolo@yolo.com',
       nickname: 'yolo'
     };
-
     // Example habits with habit1Id to be assigned in
     // beforeEach and used in habit update/delete
     var habit1Id, habit2Id;
@@ -44,11 +41,9 @@ describe('Database', function () {
       action: 'Floss',
       frequency: 'Daily'
     };
-
     // Instance ID to be assigned in beforeEach
     // to habit1 and used in deleteHabit
     var instance1Id;
-
     beforeEach(function (done) {
       request(app)
         .post('/user')
@@ -83,7 +78,6 @@ describe('Database', function () {
       var dropUser = User.remove({});
       var dropHabits = Habits.remove({});
       var dropInstances = Instances.remove({});
-
       // Promise.join coordinates a fixed number of promises concurrently
       Join(dropUser, dropHabits, dropInstances)
         .then(function (success) {
@@ -95,12 +89,6 @@ describe('Database', function () {
         .catch(function (err) {
           console.error('db.spec afterEach error:', err);
         });
-    });
-
-    after(function (done) {
-      // Close DB connection after tests complete
-      mongoose.connection.close();
-      done();
     });
 
     describe('getHabits', function () {
@@ -293,7 +281,5 @@ describe('Database', function () {
           });
       });
     });
-
   });
-
 });

@@ -19,10 +19,18 @@ export function Create (props) {
       />
       <SubmitButton onClick={props.handleClick} />
       <View style={styles.tips}>
-        <Text style={styles.tipheader}>Try to start small:</Text>
-        <Text style={styles.tiptext}>* Floss one tooth</Text>
-        <Text style={styles.tiptext}>* Walk for five minutes</Text>
-        <Text style={styles.tiptext}>* Do one pushup</Text>
+        <Text style={styles.tipheader}>
+          Try to start small:
+        </Text>
+        <Text style={styles.tiptext}>
+          * Floss one tooth
+        </Text>
+        <Text style={styles.tiptext}>
+          * Walk for five minutes
+        </Text>
+        <Text style={styles.tiptext}>
+          * Do one pushup
+        </Text>
       </View>
     </View>
   );

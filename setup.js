@@ -12,12 +12,9 @@ var config = getBabelRC();
 
 config.ignore = function(filename) {
     // if not in node_modules, we want to compile it
-  if (!(/\/node_modules\//).test(filename)) {
+  if (!(/\/node_modules\//).test(filename) || (/\/node_modules\/react-native\//).test(filename)) {
     return false;
     // its RN source code, so we want to compile it
-  } else if ((/\/node_modules\/react-native\//).test(filename)) {
-    return false;
-    // it's in node modules and NOT RN source code
   } else {
     var modulesToCompile = [
       "react-native-radio-buttons",
@@ -29,8 +26,8 @@ config.ignore = function(filename) {
       "react-native-progress-bar"
     ];
 
-    for (var i = 0; i < modulesToCompile.length; i++ ) {
-      if(filename.includes(modulesToCompile[i])) {
+    for (var i = 0; i < modulesToCompile.length; i++) {
+      if (filename.includes(modulesToCompile[i])) {
         return false;
       }
     }

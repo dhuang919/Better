@@ -7,7 +7,7 @@ import React, {
 } from 'react-native';
 
 export default function Loading (props) {
-  return(
+  return (
     <View style={styles.container}>
       <Text style={styles.text}>BETTER.</Text>
     </View>

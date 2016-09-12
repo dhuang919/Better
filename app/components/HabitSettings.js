@@ -101,7 +101,7 @@ export default class HabitSettings extends Component {
   }
 
   gotoInbox () {
-    this.props.navigator.push({ id: 'Habits' });
+    this.props.navigator.push({ id: 'InboxContainer' });
   }
 
   updateHabit (habitId) {
@@ -115,7 +115,7 @@ export default class HabitSettings extends Component {
       body: JSON.stringify(this.state.habit),
     })
     .then(api.handleErrors)
-    .then( response => res.json() )
+    .then( response => response.json() )
     .then( habit => this.gotoInbox() )
     .catch( err => console.warn(err) );
   }
@@ -129,7 +129,7 @@ export default class HabitSettings extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( () => this.props.navigator.push({ id: 'Habits' }) )
+    .then( () => this.props.navigator.push({ id: 'InboxContainer' }) )
     .catch( err => console.warn(err) );
   }
 

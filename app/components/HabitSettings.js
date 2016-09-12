@@ -24,7 +24,6 @@ import Button from 'react-native-button';
 
 export default class HabitSettings extends Component {
   constructor (props) {
-    console.log('PROPS:', props);
     super(props);
     this.state = {
       user: props.user,

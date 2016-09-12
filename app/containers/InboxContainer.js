@@ -183,7 +183,7 @@ InboxContainer.PropTypes = {
   navigator: PropTypes.object,
 };
 
-const NavigationBarRouteMapper = {
+export const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return null;
   },

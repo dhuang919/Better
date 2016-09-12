@@ -23,7 +23,7 @@ export default class LoadingContainer extends Component {
 
   goToInbox () {
     this.props.navigator.push({
-      id: 'Habits',
+      id: 'InboxContainer',
       badge: this.props.badge,
     });
   }

@@ -5,12 +5,10 @@ import React, {
   Text,
   Image,
   Alert,
-  Linking,
   ListView,
   Component,
   Navigator,
   PropTypes,
-  Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -23,7 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Inbox from '../components/Inbox';
 import Notification from '../components/Notification';
 
-export default class Habits extends Component {
+export default class InboxContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -178,7 +176,7 @@ export default class Habits extends Component {
   }
 }
 
-Habits.PropTypes = {
+InboxContainer.PropTypes = {
   route: PropTypes.object,
   token: PropTypes.object,
   profile: PropTypes.object,

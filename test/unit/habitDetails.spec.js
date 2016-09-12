@@ -250,22 +250,28 @@ describe('Habit Details', () => {
         fullDetailsWrapper.node.renderRow(mockRowData);
       });
 
-      it('should render a present day instance that is done and has a note', () => {
+      it('should render a present day instance that is done, has a note and has an onPress callback', () => {
         let mockRowData = {
           ISOString: Date.now(),
           done: true,
           note: { note: 'foo' },
         };
-        fullDetailsWrapper.node.renderRow(mockRowData);
+        let Row = () => fullDetailsWrapper.node.renderRow(mockRowData)
+        let rowWrapper = shallow(<Row />);
+        rowWrapper.find(TouchableOpacity).props().onPress();
+        expect(rowWrapper.find(TouchableOpacity).props().onPress).to.be.a('function');
       });
 
-      it('should render a present day instance that is done and does not have a note', () => {
+      it('should render a present day instance that is done', () => {
         let mockRowData = {
           ISOString: Date.now(),
           done: true,
           note: { note: '' },
         };
-        fullDetailsWrapper.node.renderRow(mockRowData);
+        let Row = () => fullDetailsWrapper.node.renderRow(mockRowData)
+        let rowWrapper = shallow(<Row />);
+        rowWrapper.find(TouchableOpacity).props().onPress();
+        expect(rowWrapper.find(TouchableOpacity).props().onPress).to.be.a('function');
       });
 
       it('should render a present day instance that is not done', () => {
@@ -284,7 +290,10 @@ describe('Habit Details', () => {
           done: true,
           note: { note: 'foo' },
         };
-        fullDetailsWrapper.node.renderRow(mockRowData);
+        let Row = () => fullDetailsWrapper.node.renderRow(mockRowData)
+        let rowWrapper = shallow(<Row />);
+        rowWrapper.find(TouchableOpacity).props().onPress();
+        expect(rowWrapper.find(TouchableOpacity).props().onPress).to.be.a('function');
       });
 
       it('should render an instance that is done', () => {
@@ -294,7 +303,10 @@ describe('Habit Details', () => {
           done: true,
           note: { note: '' },
         };
-        fullDetailsWrapper.node.renderRow(mockRowData);
+        let Row = () => fullDetailsWrapper.node.renderRow(mockRowData)
+        let rowWrapper = shallow(<Row />);
+        rowWrapper.find(TouchableOpacity).props().onPress();
+        expect(rowWrapper.find(TouchableOpacity).props().onPress).to.be.a('function');
       });
 
       it('should render an instance that is in the future', () => {

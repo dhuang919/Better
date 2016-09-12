@@ -7,9 +7,9 @@
 
 ## Team
 
-  - __Product Owner__: Pedro Torres-Picon
+  - __Product Owner__: Pedro Torres-Mackie
   - __Scrum Master__: Justin Bitely
-  - __Development Team Members__: Pierre Teo Jun Sheng, Derek Huang
+  - __Development Team__: Pierre Teo Jun Sheng, Derek Huang
 
 ## Table of Contents
 

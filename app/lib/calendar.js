@@ -32,17 +32,17 @@ export function getDaysArray (array) {
       weekInterval = array[i] + '/' + array[ i + 1 ];
       weekRange = moment.range(weekInterval);
       weekRangeArray = weekRange.toArray('days');
+      let transform = weekRangeArray.map(day => {
+        return {
+          ISOString: day.format(),
+          date: day.date(),
+          done: false,
+        };
+      });
+      // removes duplicate end-of-week day
+      transform.pop();
+      transform.forEach( day => daysArray.push(day) );
     }
-    let transform = weekRangeArray.map(day => {
-      return {
-        ISOString: day.format(),
-        date: day.date(),
-        done: false,
-      };
-    });
-    // removes duplicate end-of-week day
-    transform.pop();
-    transform.forEach( day => daysArray.push(day) );
   }
   return daysArray;
 }

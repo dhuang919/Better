@@ -47,6 +47,13 @@ const inboxContainerWrapper = shallow(
 );
 
 describe('Inbox Container', () => {
+  it('should render 1 View component', () => {
+    expect(inboxContainerWrapper.find(View)).to.have.length(1)
+  });
+
+  it('should render 1 Navigator component', () => {
+    expect(inboxContainerWrapper.find(Navigator)).to.have.length(1)
+  });
 
   describe('Navigation Bar Route Mapper', () => {
     it('should be an object with 3 methods', () => {
@@ -89,7 +96,105 @@ describe('Inbox Container', () => {
   });
 
   describe('Methods', () => {
+    let fullInboxWrapper;
+    before(() => {
+      fetchMock.get(/\/habits/, {});
+      fetchMock.post(/\/habits/, { badges: [1, 2] });
+      fullInboxWrapper = mount(
+        <InboxContainer
+          token={{}}
+          profile={{}}
+          route={{ badge: true }}
+          navigator={{ push: function() {} }}
+        />
+      );
+      fullInboxWrapper = mount(
+        <InboxContainer
+          token={{}}
+          profile={{}}
+          route={{ badge: false }}
+          navigator={{ push: function() {} }}
+        />
+      );
+    });
 
+    after(() => {
+      fetchMock.restore();
+    })
+
+    it('should have a getHabits method', () => {
+      expect(fullInboxWrapper.node.getHabits).to.be.a('function');
+    });
+
+    it('getHabits should log errors', () => {
+      fetchMock.restore();
+      let mockError = new Error('intentional inbox.spec error for testing');
+      fetchMock.get(/\/habits/, { throws: mockError });
+      fullInboxWrapper.node.getHabits();
+      fetchMock.restore();
+      fetchMock.get(/\/habits/, {});
+      fetchMock.post(/\/habits/, { badges: [1, 2] });
+    });
+
+    it('should have a editHabit method', () => {
+      fullInboxWrapper.node.editHabit();
+      expect(fullInboxWrapper.node.editHabit).to.be.a('function');
+    });
+
+    it('should have a showAlert method', function(done) {
+      // showAlert has two setTimeout calls, the longest being 3200 ms
+      this.timeout(4000);
+      fullInboxWrapper.node.showAlert({});
+      setTimeout(done, 3500);
+      expect(fullInboxWrapper.node.showAlert).to.be.a('function');
+    });
+
+    it('should have a toggleInstance method', () => {
+      fullInboxWrapper.node.toggleInstance();
+      fetchMock.restore();
+      fetchMock.get(/\/habits/, {});
+      fetchMock.post(/\/habits/, { badges: [] });
+      fullInboxWrapper.node.toggleInstance();
+      expect(fullInboxWrapper.node.toggleInstance).to.be.a('function');
+    });
+
+    it('toggleInstance should log errors', () => {
+      fetchMock.restore();
+      let mockError = new Error('intentional inbox.spec error for testing');
+      fetchMock.post(/\/habits/, { throws: mockError });
+      fullInboxWrapper.node.toggleInstance();
+      fetchMock.restore();
+      fetchMock.get(/\/habits/, {});
+      fetchMock.post(/\/habits/, { badges: [1, 2] });
+    });
+
+    it('should have a gotoDetails method', () => {
+      fullInboxWrapper.node.gotoDetails();
+      expect(fullInboxWrapper.node.gotoDetails).to.be.a('function');
+    });
+
+    it('should have a handlePress method', () => {
+      fullInboxWrapper.node.handlePress();
+      expect(fullInboxWrapper.node.handlePress).to.be.a('function');
+    });
+
+    it('should have a allowScroll method', () => {
+      fullInboxWrapper.node.allowScroll(false);
+      fullInboxWrapper.node.allowScroll(false);
+      expect(fullInboxWrapper.node.allowScroll).to.be.a('function');
+    });
+
+    it('should have a renderInboxRow method', () => {
+      fullInboxWrapper.node.renderInboxRow();
+      expect(fullInboxWrapper.node.renderInboxRow).to.be.a('function');
+    });
+
+    it('should have a renderScene method', () => {
+      fullInboxWrapper.node.renderScene();
+      fullInboxWrapper.state().badge = false;
+      fullInboxWrapper.node.renderScene();
+      expect(fullInboxWrapper.node.renderScene).to.be.a('function');
+    });
   });
 
   describe('Inbox component', () => {

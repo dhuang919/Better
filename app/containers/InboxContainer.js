@@ -53,13 +53,13 @@ export default class InboxContainer extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( (response) => response.json() )
-    .then( (responseData) => {
+    .then(response => response.json())
+    .then(responseData => {
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(responseData)
       });
     })
-    .catch( (err) => console.warn(err) );
+    .catch(err => console.warn(err));
   }
 
   editHabit (habit) {
@@ -85,14 +85,14 @@ export default class InboxContainer extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( response => response.json() )
+    .then(response => response.json() )
     .then(res => {
       if (res.badges && res.badges.length) {
         this.showAlert(res.badges[0]);
       }
       this.getHabits();
     })
-    .catch( err => console.warn(err) );
+    .catch(err => console.warn(err));
   }
 
   gotoDetails (habit) {

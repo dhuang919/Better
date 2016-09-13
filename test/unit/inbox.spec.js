@@ -27,13 +27,17 @@ import { expect } from 'chai';
 import fetchMock from 'fetch-mock';
 import { shallow, mount } from 'enzyme';
 // Wrappers
+let mockHabit = {
+  _id: '1',
+  action: 'foo',
+  lastDone: Date.now(),
+};
 const inboxWrapper = shallow(
   <Inbox
-    habit={{}}
+    habit={mockHabit}
     editHabit={() => {}}
     gotoDetails={() => {}}
     allowScroll={() => {}}
-    toggleInstance={() => {}}
     toggleInstance={() => {}}
   />
 );
@@ -198,6 +202,24 @@ describe('Inbox Container', () => {
   });
 
   describe('Inbox component', () => {
+    it('should render 4 View components', () => {
+      expect(inboxWrapper.find(View)).to.have.length(4);
+    });
 
+    it('should render 1 Swipeout component', () => {
+      expect(inboxWrapper.find(Swipeout)).to.have.length(1);
+    });
+
+    it('should render 1 Swipeout component', () => {
+      expect(inboxWrapper.find(Swipeout)).to.have.length(1);
+    });
+
+    it('should render 2 TouchableOpacity components', () => {
+      expect(inboxWrapper.find(TouchableOpacity)).to.have.length(2);
+    });
+
+    it('should render 1 TouchableOpacity component', () => {
+      expect(inboxWrapper.find(Image)).to.have.length(1);
+    });
   });
 });

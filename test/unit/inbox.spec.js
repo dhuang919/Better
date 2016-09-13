@@ -212,16 +212,46 @@ describe('Inbox Container', () => {
       expect(inboxWrapper.find(Swipeout)).to.have.length(1);
     });
 
-    it('should render 1 Swipeout component', () => {
-      expect(inboxWrapper.find(Swipeout)).to.have.length(1);
+    it('Swipeout component should have a scroll callback', () => {
+      inboxWrapper.find(Swipeout).props().scroll();
+      expect(inboxWrapper.find(Swipeout).props().scroll).to.be.a('function');
+    });
+
+    it('Swipeout should pass an array containing a single object with an onPress callback to the right prop', () => {
+      expect(inboxWrapper.find(Swipeout).props().right).to.be.an('array');
+      inboxWrapper.find(Swipeout).props().right[0].onPress();
+      expect(inboxWrapper.find(Swipeout).props().right[0].onPress).to.be.a('function');
     });
 
     it('should render 2 TouchableOpacity components', () => {
       expect(inboxWrapper.find(TouchableOpacity)).to.have.length(2);
     });
 
-    it('should render 1 TouchableOpacity component', () => {
+    it('should pass onPress callbacks to both TouchableOpacity components', () => {
+      let components = inboxWrapper.find(TouchableOpacity).nodes;
+      components.forEach(component => {
+        component.props.onPress();
+        expect(component.props.onPress).to.be.a('function');
+      });
+    });
+
+    it('should render 1 Image component', () => {
       expect(inboxWrapper.find(Image)).to.have.length(1);
+    });
+
+    it('Image component should render a gray checkmark if the habit is not done', () => {
+      let twoDaysAgo = Date.now() + (1000 * 60 * 60 * 24 * 2);
+      mockHabit.lastDone = twoDaysAgo;
+      inboxWrapper = shallow(
+        <Inbox
+          habit={mockHabit}
+          editHabit={() => {}}
+          gotoDetails={() => {}}
+          allowScroll={() => {}}
+          toggleInstance={() => {}}
+        />
+      );
+      expect(inboxWrapper.find(Image).props().source.uri.includes('done_gray.png')).to.be.true;
     });
   });
 

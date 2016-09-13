@@ -6,6 +6,7 @@ import React, {
   Image,
   Alert,
   ListView,
+  Animated,
   Navigator,
   TouchableOpacity,
 } from 'react-native';
@@ -49,6 +50,7 @@ const inboxContainerWrapper = shallow(
     navigator={{ push: function() {} }}
   />
 );
+let notificationWrapper = shallow(<Notification />);
 
 describe('Inbox Container', () => {
   it('should render 1 View component', () => {
@@ -220,6 +222,70 @@ describe('Inbox Container', () => {
 
     it('should render 1 TouchableOpacity component', () => {
       expect(inboxWrapper.find(Image)).to.have.length(1);
+    });
+  });
+
+  describe('Notification component', () => {
+    before(() => {
+      notificationWrapper.instance().componentDidMount();
+      notificationWrapper = shallow(
+        <Notification
+          name={'foo'}
+          icon={'bar'}
+          visible={true}
+        />
+      );
+    });
+
+    it('should render 2 Animated.View components', () => {
+      expect(notificationWrapper.find(Animated.View)).to.have.length(2);
+    });
+
+    it('should render 2 Animated.Text components', () => {
+      expect(notificationWrapper.find(Animated.Text)).to.have.length(2);
+    });
+
+    it('should render 1 Animated.Image component', () => {
+      expect(notificationWrapper.find(Animated.Image)).to.have.length(1);
+    });
+
+    describe('Methods', () => {
+      it('should have a componentDidMount method', () => {
+        notificationWrapper.instance().componentDidMount();
+        expect(notificationWrapper.instance().componentDidMount).to.be.a('function');
+      });
+
+      it('should have a componentWillReceiveProps method', () => {
+        notificationWrapper = shallow(
+          <Notification
+            name={'foo'}
+            icon={'bar'}
+            visible={false}
+          />
+        );
+        let nextProps = { visible: true };
+        notificationWrapper.instance().componentWillReceiveProps(nextProps);
+        notificationWrapper = shallow(
+          <Notification
+            name={'foo'}
+            icon={'bar'}
+            visible={true}
+          />
+        );
+        nextProps = { visible: false };
+        notificationWrapper.instance().componentWillReceiveProps(nextProps);
+        nextProps = { visible: true };
+        notificationWrapper.instance().componentWillReceiveProps(nextProps);
+        expect(notificationWrapper.instance().componentWillReceiveProps).to.be.a('function');
+      });
+
+      it('should have a shouldComponentUpdate method', () => {
+        let nextProps = { visible: false };
+        notificationWrapper.instance().shouldComponentUpdate(nextProps);
+        nextProps = { visible: true };
+        notificationWrapper.instance().shouldComponentUpdate(nextProps);
+        expect(notificationWrapper.instance().shouldComponentUpdate).to.be.a('function');
+      });
     });
   });
 });

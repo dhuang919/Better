@@ -111,7 +111,13 @@ describe('Habit Settings', () => {
         reminder: {
           active: true,
           days: {
+            mon: true,
+            tue: true,
+            wed: true,
+            thu: true,
             fri: true,
+            sat: true,
+            sun: true,
           }
         },
       };
@@ -144,6 +150,17 @@ describe('Habit Settings', () => {
 
     it('should have an onReminderChange method', () => {
       fullSettingsWrapper.node.onReminderChange(true);
+      mockUser.phoneNumber = true;
+      let tempSettingsWrapper = mount(
+        <HabitSettings
+          token={{}}
+          profile={{}}
+          user={mockUser}
+          habit={mockHabit}
+          navigator={{ push: function () {} }}
+        />
+      );
+      tempSettingsWrapper.node.onReminderChange(true);
       expect(fullSettingsWrapper.node.onReminderChange).to.be.a('function');
     });
 
@@ -157,9 +174,29 @@ describe('Habit Settings', () => {
       expect(fullSettingsWrapper.node.updateHabit).to.be.a('function');
     });
 
+    it('updateHabit should log errors', () => {
+      fetchMock.restore();
+      let mockError = new Error('intentional habitSettings.spec error for testing');
+      fetchMock.put(/\/habits/, { throws: mockError });
+      fullSettingsWrapper.node.updateHabit();
+      fetchMock.restore();
+      fetchMock.put(/\/habits/, {})
+      fetchMock.delete(/\/habits/, 200);
+    });
+
     it('should have an deleteHabit method', () => {
       fullSettingsWrapper.node.deleteHabit();
       expect(fullSettingsWrapper.node.deleteHabit).to.be.a('function');
+    });
+
+    it('deleteHabit should log errors', () => {
+      fetchMock.restore();
+      let mockError = new Error('intentional habitSettings.spec error for testing');
+      fetchMock.delete(/\/habits/, { throws: mockError });
+      fullSettingsWrapper.node.deleteHabit();
+      fetchMock.restore();
+      fetchMock.put(/\/habits/, {})
+      fetchMock.delete(/\/habits/, 200);
     });
 
     it('should have an toggleDay method', () => {
@@ -167,20 +204,39 @@ describe('Habit Settings', () => {
       expect(fullSettingsWrapper.node.toggleDay).to.be.a('function');
     });
 
-    it('should have an renderScene method', () => {
-      fullSettingsWrapper.node.renderScene();
-      mockHabit.reminder.active = false;
-      fullSettingsWrapper = mount(
-        <HabitSettings
+    describe('renderScene', () => {
+      it('should exist', () => {
+        expect(fullSettingsWrapper.node.renderScene).to.be.a('function');
+      });
+
+      it('should render more Button components, each with their own callbacks, if the reminder is active', () => {
+        let RenderedScene = () => fullSettingsWrapper.node.renderScene();
+        let renderedWrapper = shallow(<RenderedScene />);
+        renderedWrapper.find(Button).nodes.forEach(buttonNode => {
+          buttonNode.props.onPress();
+          expect(buttonNode.props.onPress).to.be.a('function');
+        });
+      });
+
+      it('should render less Button components if the reminder is not active', () => {
+        mockHabit.reminder.active = false;
+        fullSettingsWrapper = mount(
+          <HabitSettings
           user={{}}
           token={{}}
           profile={{}}
           habit={mockHabit}
           navigator={{ push: function () {} }}
-        />
-      );
-      fullSettingsWrapper.node.renderScene();
-      expect(fullSettingsWrapper.node.renderScene).to.be.a('function');
+          />
+        );
+        let RenderedScene = () => fullSettingsWrapper.node.renderScene();
+        let renderedWrapper = shallow(<RenderedScene />);
+        expect(renderedWrapper.find(View)).to.have.length(2);
+        expect(renderedWrapper.find(Text)).to.have.length(1);
+        expect(renderedWrapper.find(TextInput)).to.have.length(1);
+        expect(renderedWrapper.find(Switch)).to.have.length(1);
+        expect(renderedWrapper.find(Button)).to.have.length(2);
+      });
     });
   });
 });

@@ -19,6 +19,7 @@ import HabitSettings, {
 import api from '../../app/lib/api';
 import Button from 'react-native-button';
 // Testing dependencies
+import sinon from 'sinon';
 import { expect } from 'chai';
 import fetchMock from 'fetch-mock';
 import { shallow, mount } from 'enzyme';

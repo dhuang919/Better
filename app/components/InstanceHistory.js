@@ -59,18 +59,19 @@ export default class InstanceHistory extends Component {
           />
         </View>
       );
-    }
-    return (
-      <View style={styles.row}>
+    } else {
+      return (
+        <View style={styles.row}>
         <Text style={styles.date}>
-          {moment(rowData.ISOString).format('MMMM Do YYYY')}
+        {moment(rowData.ISOString).format('MMMM Do YYYY')}
         </Text>
         <Image
-          style={styles.img}
-          source={{uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'}}
+        style={styles.img}
+        source={{uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'}}
         />
-      </View>
-    );
+        </View>
+      );
+    }
   }
 
   render () {

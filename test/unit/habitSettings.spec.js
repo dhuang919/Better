@@ -102,6 +102,85 @@ describe('Habit Settings', () => {
   });
 
   describe('Methods', () => {
+    let fullSettingsWrapper, mockHabit, mockUser;
+    before(() => {
+      mockUser = {
+        phoneNumber: false,
+      };
+      mockHabit = {
+        reminder: {
+          active: true,
+          days: {
+            fri: true,
+          }
+        },
+      };
+      fetchMock.put(/\/habits/, {});
+      fetchMock.delete(/\/habits/, 200);
+      fullSettingsWrapper = mount(
+        <HabitSettings
+          token={{}}
+          profile={{}}
+          user={mockUser}
+          habit={mockHabit}
+          navigator={{ push: function () {} }}
+        />
+      );
+    });
 
+    after(() => {
+      fetchMock.restore();
+    });
+
+    it('should have an onDateChange method', () => {
+      fullSettingsWrapper.node.onDateChange(new Date());
+      expect(fullSettingsWrapper.node.onDateChange).to.be.a('function');
+    });
+
+    it('should have an onTextChange method', () => {
+      fullSettingsWrapper.node.onTextChange('foo');
+      expect(fullSettingsWrapper.node.onTextChange).to.be.a('function');
+    });
+
+    it('should have an onReminderChange method', () => {
+      fullSettingsWrapper.node.onReminderChange(true);
+      expect(fullSettingsWrapper.node.onReminderChange).to.be.a('function');
+    });
+
+    it('should have an gotoInbox method', () => {
+      fullSettingsWrapper.node.gotoInbox();
+      expect(fullSettingsWrapper.node.gotoInbox).to.be.a('function');
+    });
+
+    it('should have an updateHabit method', () => {
+      fullSettingsWrapper.node.updateHabit();
+      expect(fullSettingsWrapper.node.updateHabit).to.be.a('function');
+    });
+
+    it('should have an deleteHabit method', () => {
+      fullSettingsWrapper.node.deleteHabit();
+      expect(fullSettingsWrapper.node.deleteHabit).to.be.a('function');
+    });
+
+    it('should have an toggleDay method', () => {
+      fullSettingsWrapper.node.toggleDay('fri');
+      expect(fullSettingsWrapper.node.toggleDay).to.be.a('function');
+    });
+
+    it('should have an renderScene method', () => {
+      fullSettingsWrapper.node.renderScene();
+      mockHabit.reminder.active = false;
+      fullSettingsWrapper = mount(
+        <HabitSettings
+          user={{}}
+          token={{}}
+          profile={{}}
+          habit={mockHabit}
+          navigator={{ push: function () {} }}
+        />
+      );
+      fullSettingsWrapper.node.renderScene();
+      expect(fullSettingsWrapper.node.renderScene).to.be.a('function');
+    });
   });
 });

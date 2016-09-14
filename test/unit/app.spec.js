@@ -64,37 +64,51 @@ describe('App Container', () => {
 
     it('renderScene should render LoadingContainer if the route ID is "Loading"', () => {
       let route = { id: 'Loading' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(LoadingContainer)).to.have.length(1);
     });
 
     it('renderScene should render OnboardContainer if the route ID is "Onboard"', () => {
       let route = { id: 'Onboard' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(OnboardContainer)).to.have.length(1);
     });
 
     it('renderScene should render CreateContainer if the route ID is "CreateContainer"', () => {
       let route = { id: 'CreateContainer' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(CreateContainer)).to.have.length(1);
     });
 
     it('renderScene should render InboxContainer if the route ID is "InboxContainer"', () => {
       let route = { id: 'InboxContainer' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(InboxContainer)).to.have.length(1);
     });
 
     it('renderScene should render HabitSettings if the route ID is "HabitSettings"', () => {
       let route = { id: 'HabitSettings' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(HabitSettings)).to.have.length(1);
     });
 
     it('renderScene should render HabitDetails if the route ID is "HabitDetails"', () => {
       let route = { id: 'HabitDetails' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(HabitDetails)).to.have.length(1);
     });
 
     it('renderScene should render InstanceHistory if the route ID is "InstanceHistory"', () => {
       let route = { id: 'InstanceHistory' };
-      fullAppWrapper.node.renderScene(route);
+      let RenderedScene = () => fullAppWrapper.node.renderScene(route);
+      let renderedWrapper = shallow(<RenderedScene />);
+      expect(renderedWrapper.find(InstanceHistory)).to.have.length(1);
     });
   });
 });

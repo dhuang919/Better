@@ -101,27 +101,43 @@ describe('Instance History', () => {
   });
 
   describe('Methods', () => {
-    let fullHistoryWrapper;
+    let fullHistoryWrapper, mockHabit, mockInstances;
     before(() => {
+      let fiveDaysAgo = Date.now() - (1000 * 60 * 60 * 24 * 5);
+      mockHabit = { createdAt: Date.now() };
+      mockInstances = [
+        { createdAt: fiveDaysAgo },
+        { createdAt: Date.now() },
+      ];
       fullHistoryWrapper = mount(
         <InstanceHistory
           token={{}}
-          habit={{}}
           profile={{}}
           navigator={{}}
-          instances={[Date.now()]}
+          habit={mockHabit}
+          instances={mockInstances}
         />
       );
     });
 
     it('should have a renderRow method', () => {
-      fullHistoryWrapper.node.renderRow();
+      let rowData = { done: true };
+      fullHistoryWrapper.node.renderRow(rowData);
+      rowData.done = false;
+      fullHistoryWrapper.node.renderRow(rowData);
       expect(fullHistoryWrapper.node.renderRow).to.be.a('function');
     });
 
     it('should have a renderScene method', () => {
       fullHistoryWrapper.node.renderScene();
       expect(fullHistoryWrapper.node.renderScene).to.be.a('function');
+    });
+
+    it('renderScene should render a ListView component which receives a callback', () => {
+      let RenderedScene = () => fullHistoryWrapper.node.renderScene();
+      let renderedWrapper = shallow(<RenderedScene />);
+      renderedWrapper.find(ListView).node.props.renderHeader();
+      expect(renderedWrapper.find(ListView).node.props.renderHeader).to.be.a('function');
     });
   });
 });

@@ -52,7 +52,6 @@ const badgeViewWrapper = shallow(
 );
 
 describe('Profile Container', () => {
-
   it('should render 1 View component', () => {
     expect(profileContainerWrapper.find(View)).to.have.length(1);
   });
@@ -176,12 +175,12 @@ describe('Profile Container', () => {
         });
         fullProfileWrapper = mount(
           <Profile
-          token={{}}
-          badgeURIs={{}}
-          user={mockUser}
-          profile={mockProfile}
-          handleLogout={() => {}}
-          navigator={{ push: function() {} }}
+            token={{}}
+            badgeURIs={{}}
+            user={mockUser}
+            profile={mockProfile}
+            handleLogout={() => {}}
+            navigator={{ push: function() {} }}
           />
         );
       });

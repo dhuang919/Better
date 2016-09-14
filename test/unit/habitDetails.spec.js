@@ -216,7 +216,7 @@ describe('Habit Details', () => {
 
     it('should have a renderScene method', () => {
       fullDetailsWrapper.node.renderScene();
-      let eightDaysAgo = Date.now() * 1000 * 60 * 60 * 24 * 8;
+      let eightDaysAgo = Date.now() - (1000 * 60 * 60 * 24 * 8);
       let mockHabit = {
         action: 'foobar',
         lastDone: eightDaysAgo,

@@ -201,6 +201,7 @@ describe('Habit Settings', () => {
 
     it('should have an toggleDay method', () => {
       fullSettingsWrapper.node.toggleDay('fri');
+      fullSettingsWrapper.node.toggleDay('fri');
       expect(fullSettingsWrapper.node.toggleDay).to.be.a('function');
     });
 
@@ -216,9 +217,10 @@ describe('Habit Settings', () => {
           buttonNode.props.onPress();
           expect(buttonNode.props.onPress).to.be.a('function');
         });
+        fullSettingsWrapper.node.renderScene();
       });
 
-      it('should render less Button components if the reminder is not active', () => {
+      it('should render less Button components, each with their own callbacks, if the reminder is not active', () => {
         mockHabit.reminder.active = false;
         fullSettingsWrapper = mount(
           <HabitSettings
@@ -231,11 +233,10 @@ describe('Habit Settings', () => {
         );
         let RenderedScene = () => fullSettingsWrapper.node.renderScene();
         let renderedWrapper = shallow(<RenderedScene />);
-        expect(renderedWrapper.find(View)).to.have.length(2);
-        expect(renderedWrapper.find(Text)).to.have.length(1);
-        expect(renderedWrapper.find(TextInput)).to.have.length(1);
-        expect(renderedWrapper.find(Switch)).to.have.length(1);
-        expect(renderedWrapper.find(Button)).to.have.length(2);
+        renderedWrapper.find(Button).nodes.forEach(buttonNode => {
+          buttonNode.props.onPress();
+          expect(buttonNode.props.onPress).to.be.a('function');
+        });
       });
     });
   });

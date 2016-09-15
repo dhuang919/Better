@@ -5,7 +5,7 @@
   "description": "Build better habits",
   "main": "server.js",
   "scripts": {
-    "pretest": "mocha test/integration/db.spec.js test/integration/server.spec.js",
+    "pretest": "mocha --require setup.js --compilers js:babel-core/register test/integration/db.spec.js test/integration/server.spec.js",
     "test": "nyc mocha --require setup.js --compilers js:babel-core/register test/unit/*.spec.js && cat ./coverage/lcov.info | coveralls",
     "start": "node server/server.js",
     "local": "nodemon server/server.js"

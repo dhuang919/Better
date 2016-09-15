@@ -24,7 +24,6 @@ import Button from 'react-native-button';
 
 export default class HabitSettings extends Component {
   constructor (props) {
-    console.log('PROPS:', props);
     super(props);
     this.state = {
       user: props.user,
@@ -102,7 +101,7 @@ export default class HabitSettings extends Component {
   }
 
   gotoInbox () {
-    this.props.navigator.push({ id: 'Habits' });
+    this.props.navigator.push({ id: 'InboxContainer' });
   }
 
   updateHabit (habitId) {
@@ -116,7 +115,7 @@ export default class HabitSettings extends Component {
       body: JSON.stringify(this.state.habit),
     })
     .then(api.handleErrors)
-    .then( response => res.json() )
+    .then( response => response.json() )
     .then( habit => this.gotoInbox() )
     .catch( err => console.warn(err) );
   }
@@ -130,7 +129,7 @@ export default class HabitSettings extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( () => this.props.navigator.push({ id: 'Habits' }) )
+    .then( () => this.props.navigator.push({ id: 'InboxContainer' }) )
     .catch( err => console.warn(err) );
   }
 
@@ -307,7 +306,7 @@ HabitSettings.PropTypes = {
   navigator: PropTypes.object,
 };
 
-const NavigationBarRouteMapper = {
+export const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity

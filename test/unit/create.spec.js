@@ -114,7 +114,7 @@ describe('Create Container', () => {
     });
 
     it('sendHabit should log errors', () => {
-      let mockError = new Error('intentional error for testing');
+      let mockError = new Error('intentional create.spec error for testing');
       fetchMock.post(/\/habits/, { throws: mockError });
       let fullContainerWrapper = mount(
         <CreateContainer

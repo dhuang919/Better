@@ -22,7 +22,7 @@ export default class InstanceHistory extends Component {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({
-        rowHasChanged: function (row1, row2) {
+        rowHasChanged (row1, row2) {
           return row1 !== row2;
         },
       }),
@@ -32,43 +32,46 @@ export default class InstanceHistory extends Component {
   }
 
   componentDidMount () {
-    var days = getInstancePeriod(this.props.habit.createdAt, moment().format());
-    days.forEach(function(day) {
-      this.props.instances.forEach(function (instance) {
+    let days = getInstancePeriod(this.props.habit.createdAt, moment().format());
+    days.forEach(day => {
+      this.props.instances.forEach(instance => {
         if (moment(day.ISOString).isSame(instance.createdAt, 'day')) {
           day.note = instance.note;
           day.done = true;
         }
       });
-    }.bind(this));
+    });
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(days)
-    })
+    });
   }
 
   renderRow (rowData, sectionID, rowID) {
     if (rowData.done) {
       return (
         <View style={styles.row} >
-          <Text style={styles.date} >{ moment(rowData.ISOString).format('MMMM Do YYYY') }</Text>
+          <Text style={styles.date}>
+            {moment(rowData.ISOString).format('MMMM Do YYYY')}
+          </Text>
           <Image
             style={styles.img}
             source={{uri: 'http://better-habits.herokuapp.com/assets/done_green.png'}}
           />
         </View>
       );
-    }
-    return (
-      <View style={styles.row}>
+    } else {
+      return (
+        <View style={styles.row}>
         <Text style={styles.date}>
-          {moment(rowData.ISOString).format('MMMM Do YYYY')}
+        {moment(rowData.ISOString).format('MMMM Do YYYY')}
         </Text>
-          <Image
-            style={ styles.img }
-            source={ {uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'} }
-          />
-      </View>
-    );
+        <Image
+        style={styles.img}
+        source={{uri: 'http://better-habits.herokuapp.com/assets/done_gray.png'}}
+        />
+        </View>
+      );
+    }
   }
 
   render () {
@@ -78,8 +81,9 @@ export default class InstanceHistory extends Component {
           renderScene={this.renderScene}
           navigator={this.props.navigator}
           navigationBar={
-            <Navigator.NavigationBar style={{backgroundColor: '#6399DC', alignItems: 'center'}}
+            <Navigator.NavigationBar
               routeMapper={NavigationBarRouteMapper}
+              style={{backgroundColor: '#6399DC', alignItems: 'center'}}
             />
           }
         />
@@ -104,11 +108,11 @@ InstanceHistory.PropTypes = {
   habit: PropTypes.object,
   token: PropTypes.object,
   profile: PropTypes.object,
-  navigator: PropTypes.object,
   instances: PropTypes.array,
+  navigator: PropTypes.object,
 };
 
-const NavigationBarRouteMapper = {
+export const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return (
       <TouchableOpacity

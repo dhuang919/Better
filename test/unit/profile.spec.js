@@ -52,7 +52,6 @@ const badgeViewWrapper = shallow(
 );
 
 describe('Profile Container', () => {
-
   it('should render 1 View component', () => {
     expect(profileContainerWrapper.find(View)).to.have.length(1);
   });
@@ -136,9 +135,10 @@ describe('Profile Container', () => {
     });
 
     describe('Methods', () => {
-      let fullProfileWrapper;
+      let fullProfileWrapper, mockUser, mockProfile;
+
       before(() => {
-        let mockUser = {
+        mockUser = {
           badges: [
             badges['First Step'],
             badges['Better Already'],
@@ -148,7 +148,7 @@ describe('Profile Container', () => {
           newUser: false,
           userName: 'foo',
         };
-        let mockProfile = {
+        mockProfile = {
           email: 'foo@bar.com',
           name: 'foo@bar.com',
           nickanme: 'foo',
@@ -175,12 +175,12 @@ describe('Profile Container', () => {
         });
         fullProfileWrapper = mount(
           <Profile
-          token={{}}
-          badgeURIs={{}}
-          user={mockUser}
-          profile={mockProfile}
-          handleLogout={() => {}}
-          navigator={{ push: function() {} }}
+            token={{}}
+            badgeURIs={{}}
+            user={mockUser}
+            profile={mockProfile}
+            handleLogout={() => {}}
+            navigator={{ push: function() {} }}
           />
         );
       });
@@ -268,8 +268,30 @@ describe('Profile Container', () => {
       });
 
       it('refreshUserData should log errors', () => {
-        let mockError = new Error('foo');
+        fetchMock.restore();
+        let mockError = new Error('intentional profile.spec error for testing');
         fetchMock.get(/\/user/, { throws: mockError });
+        fullProfileWrapper.node.refreshUserData();
+        fetchMock.restore();
+        fetchMock.get(/\/user/, {
+          body: {
+            user: mockUser,
+            habits: [
+              {
+                action: 'Foo',
+                streak: { current: 1 }
+              },
+              {
+                action: 'Bar',
+                streak: { current: 1 }
+              },
+              {
+                action: 'Baz',
+                streak: { current: 1 }
+              },
+            ],
+          }
+        });
       });
 
       it('should have a calculateProgress method', () => {

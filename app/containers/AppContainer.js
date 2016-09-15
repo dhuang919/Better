@@ -8,7 +8,7 @@ import React, {
   TouchableOpacity,
 } from 'react-native';
 // App components
-import Habits from './InboxContainer';
+import InboxContainer from './InboxContainer';
 import CreateContainer from './CreateContainer';
 import OnboardContainer from './OnboardContainer';
 import LoadingContainer from './LoadingContainer';
@@ -74,9 +74,9 @@ export default class AppContainer extends Component {
             resetToTabs={this.state.resetToTabs}
           />
         );
-      case 'Habits':
+      case 'InboxContainer':
         return (
-          <Habits
+          <InboxContainer
             route={route}
             navigator={navigator}
             token={this.state.token}

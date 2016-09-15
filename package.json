@@ -1,6 +1,6 @@
 {
   "name": "Better",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Build better habits",
   "main": "server.js",
@@ -46,7 +46,7 @@
     "nyc": "^8.1.0",
     "react-addons-test-utils": "^0.14.7",
     "react-dom": "^0.14.7",
-    "react-native-mock": "0.0.7",
+    "react-native-mock": "^0.2.6",
     "request": "^2.69.0",
     "sinon": "^1.17.5",
     "supertest": "^1.2.0"

@@ -5,12 +5,10 @@ import React, {
   Text,
   Image,
   Alert,
-  Linking,
   ListView,
   Component,
   Navigator,
   PropTypes,
-  Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -23,7 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Inbox from '../components/Inbox';
 import Notification from '../components/Notification';
 
-export default class Habits extends Component {
+export default class InboxContainer extends Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -55,13 +53,13 @@ export default class Habits extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( (response) => response.json() )
-    .then( (responseData) => {
+    .then(response => response.json())
+    .then(responseData => {
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(responseData)
       });
     })
-    .catch( (err) => console.warn(err) );
+    .catch(err => console.warn(err));
   }
 
   editHabit (habit) {
@@ -87,14 +85,14 @@ export default class Habits extends Component {
       },
     })
     .then(api.handleErrors)
-    .then( response => response.json() )
+    .then(response => response.json() )
     .then(res => {
       if (res.badges && res.badges.length) {
         this.showAlert(res.badges[0]);
       }
       this.getHabits();
     })
-    .catch( err => console.warn(err) );
+    .catch(err => console.warn(err));
   }
 
   gotoDetails (habit) {
@@ -178,14 +176,14 @@ export default class Habits extends Component {
   }
 }
 
-Habits.PropTypes = {
+InboxContainer.PropTypes = {
   route: PropTypes.object,
   token: PropTypes.object,
   profile: PropTypes.object,
   navigator: PropTypes.object,
 };
 
-const NavigationBarRouteMapper = {
+export const NavigationBarRouteMapper = {
   LeftButton (route, navigator, index, navState) {
     return null;
   },

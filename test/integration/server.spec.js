@@ -2,247 +2,218 @@
 process.env.NODE_ENV = 'test';
 
 // Test
-var request = require('supertest');
-var expect = require('chai').expect;
+import request from 'supertest';
+import { expect } from 'chai';
 
 // Bluebird 'join' method used in afterEach function
-var Join = require('bluebird').join;
+import { join as Join } from 'bluebird';
+
+// Moment to test the lastDone property
+import moment from 'moment';
 
 // Server
-var app = require('../../server/server');
+const app = require('../../server/server');
 
 // DB Models
-var mongoose = require('mongoose');
-var User = require('../../db/models').User;
-var Habits = require('../../db/models').Habits;
-var Instances = require('../../db/models').Instances;
+import mongoose from 'mongoose';
+import {
+  User,
+  Habits,
+  Instances,
+} from '../../db/models';
 
-describe('Basic Server', function () {
+describe('Basic Server', () => {
   // Example user
-  var user = {
-    email: 'yolo@yolo.com'
-  };
+  let user = { email: 'yolo@yolo.com' };
   // Example habits with habit1Id to be assigned in
   // beforeEach and used in habit PUT/DELETE
-  var habit1Id;
-  var habit1 = {
+  let habit1Id;
+  let habit1 = {
     action: 'Write tests',
-    frequency: 'Daily'
+    frequency: 'Daily',
   };
-  var habit2 = {
+  let habit2 = {
     action: 'Floss',
-    frequency: 'Daily'
+    frequency: 'Daily',
   };
   // Instance ID to be assigned in beforeEach
   // to habit1 and used in deleteHabit
-  var instance1Id;
-  beforeEach(function (done) {
+  let instance1Id;
+  beforeEach(done => {
     request(app)
       .post('/user')
       .send(user)
       .expect(200)
-      .expect(function (res) {
-        expect(res.body.email).to.equal('yolo@yolo.com');
-      })
-      .end(function () {
+      .expect(res => expect(res.body.email).to.equal('yolo@yolo.com'))
+      .end(() => {
         request(app)
-        .post('/habits/' + user.email)
+        .post(`/habits/${user.email}`)
         .send(habit1)
         .expect(201)
-        .expect(function (res) {
+        .expect(res => {
           habit1Id = res.body.habit._id;
           instance1Id = res.body.habit.instancesId;
         })
-        .end(function () {
+        .end(() => {
           request(app)
-          .post('/habits/' + user.email)
+          .post(`/habits/${user.email}`)
           .send(habit2)
           .expect(201)
-          .expect(function (res) {
-            habit2Id = res.body.habit._id;
-          })
+          .expect(res => habit2Id = res.body.habit._id)
           .end(done);
         });
       });
   });
 
-  afterEach(function (done) {
-    var dropUser = User.remove({});
-    var dropHabits = Habits.remove({});
-    var dropInstances = Instances.remove({});
+  afterEach(done => {
+    let dropUser = User.remove({});
+    let dropHabits = Habits.remove({});
+    let dropInstances = Instances.remove({});
     // Promise.join coordinates a fixed number of promises concurrently
     Join(dropUser, dropHabits, dropInstances)
-      .then(function (success) {
-        // console.log('dropUser success:', success[0].result);
-        // console.log('dropHabits success:', success[1].result);
-        // console.log('dropInstances success:', success[2].result);
-        done();
-      })
-      .catch(function (err) {
-        console.error('db.spec afterEach error:', err);
-      });
+      .then(success => done())
+      .catch(err => console.error('db.spec afterEach error:', err));
   });
 
-  after(function (done) {
-    // Close DB connection after tests complete
-    mongoose.connection.close();
-    done();
-  });
+  after(() => mongoose.connection.close());
 
-  describe('GET /habits/:user', function () {
-    it('should return 200 on success', function (done) {
+  describe('GET /habits/:user', () => {
+    it('should return 200 on success', done => {
       request(app)
-        .get('/habits/' + user.email)
+        .get(`/habits/${user.email}`)
         .expect(200)
         .end(done);
     });
 
-    it('should respond with JSON', function (done) {
+    it('should respond with JSON', done => {
       request(app)
-        .get('/habits/' + user.email)
+        .get(`/habits/${user.email}`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200)
         .end(done);
     });
 
-    it('should retrieve habits', function (done) {
+    it('should retrieve habits', done => {
       request(app)
-        .get('/habits/' + user.email)
+        .get(`/habits/${user.email}`)
         .expect(200)
-        .expect(function (res) {
+        .expect(res => {
           expect(res.body.length).to.equal(2);
           expect(habit1.action).to.equal(res.body[0].action);
           expect(habit1.frequency).to.equal(res.body[0].frequency);
         })
         .end(done);
     });
-
   });
 
-  describe('POST /habits/:user', function () {
+  describe('POST /habits/:user', () => {
     // Habit to send in POST requests
-    var habit3 = {
-      action: 'Run',
-    };
+    let habit3 = { action: 'Run' };
 
-    it('should return 201 on success', function (done) {
+    it('should return 201 on success', done => {
       request(app)
-        .post('/habits/' + user.email)
+        .post(`/habits/${user.email}`)
         .send(habit3)
         .expect(201)
         .end(done);
     });
 
-    it('should return 400 on error (required fields missing)', function (done) {
-      var errHabit = {};
+    it('should return 400 on error (required fields missing)', done => {
+      let errHabit = {};
       request(app)
-        .post('/habits/' + user.email)
+        .post(`/habits/${user.email}`)
         .send(errHabit)
         .expect(400)
         .end(done);
     });
 
-    it('should respond with new habit on success', function (done) {
+    it('should respond with new habit on success', done => {
       request(app)
-        .post('/habits/' + user.email)
+        .post(`/habits/${user.email}`)
         .send(habit3)
         .expect(201)
-        .expect(function (res) {
-          expect(res.body.habit.action).to.equal(habit3.action);
-        })
+        .expect(res => expect(res.body.habit.action).to.equal(habit3.action))
         .end(done);
     });
 
-    it('should create new instance for each new habit', function (done) {
+    it('should create new instance for each new habit', done => {
       request(app)
-        .post('/habits/' + user.email)
+        .post(`/habits/${user.email}`)
         .send(habit3)
         .expect(201)
-        .expect(function (res) {
+        .expect(res => {
           instance1Id = res.body.habit.instancesId;
           Instances.findById(instance1Id)
-            .then(function (success) {
-              expect(instance1Id).to.equal(success._id.toString());
-            })
-            .catch(function (err) {
-              console.error('Instance fail:', err);
-            });
+            .then(success => expect(instance1Id).to.equal(success._id.toString()))
+            .catch(err => console.error('Instance fail:', err));
         })
         .end(done);
     });
   });
 
-  describe('PUT /habits/:user/:habitid', function () {
+  describe('PUT /habits/:user/:habitid', () => {
     // Updates to be used in request
-    var update1 = {
-      action: 'Write BETTER tests',
-    };
+    let update1 = { action: 'Write BETTER tests' };
 
-    it('should return 200 on success', function (done) {
+    it('should return 200 on success', done => {
       request(app)
-        .put('/habits/' + user.email + '/' + habit1Id)
+        .put(`/habits/${user.email}/${habit1Id}`)
         .send(update1)
         .expect(200)
         .end(done);
     });
 
     // Incorrect ID not being handled and returning status 200
-    it('should return 400 on error (incorrect ID)', function (done) {
+    it('should return 400 on error (incorrect ID)', done => {
       request(app)
-        .put('/habits/' + user.email + '/12345')
+        .put(`/habits/${user.email}/12345`)
         .expect(400)
         .end(done);
     });
 
-    it('should return updated habit', function (done) {
+    it('should return updated habit', done => {
       request(app)
-        .put('/habits/' + user.email + '/' + habit1Id)
+        .put(`/habits/${user.email}/${habit1Id}`)
         .send(update1)
         .expect(200)
-        .expect(function (res) {
-          expect(update1.action).to.equal(res.body.action);
-        })
+        .expect(res => expect(update1.action).to.equal(res.body.action))
         .end(done);
     });
   });
 
-  describe('DELETE /habits/:user/:habitid', function () {
-    it('should return 200 on success', function (done) {
+  describe('DELETE /habits/:user/:habitid', () => {
+    it('should return 200 on success', done => {
       request(app)
-        .delete('/habits/' + user.email + '/' + habit1Id)
+        .delete(`/habits/${user.email}/${habit1Id}`)
         .expect(200)
         .end(done);
     });
 
-    it('should return 400 on error (incorrect ID)', function (done) {
+    it('should return 400 on error (incorrect ID)', done => {
       request(app)
-        .delete('/habits/' + user.email + '/12345')
+        .delete(`/habits/${user.email}/12345`)
         .expect(400)
         .end(done);
     });
 
-    it('should return deleted habit', function (done) {
+    it('should return deleted habit', done => {
       request(app)
-        .delete('/habits/' + user.email + '/' + habit1Id)
+        .delete(`/habits/${user.email}/${habit1Id}`)
         .expect(200)
-        .expect(function (res) {
-          expect(habit1Id).to.equal(res.body._id);
-        })
+        .expect(res => expect(habit1Id).to.equal(res.body._id))
         .end(done);
     });
 
-    it('should delete habit from database', function (done) {
+    it('should delete habit from database', done => {
       request(app)
-        .delete('/habits/' + user.email + '/' + habit1Id)
+        .delete(`/habits/${user.email}/${habit1Id}`)
         .expect(200)
-        .end(function () {
+        .end(() => {
           request(app)
-            .get('/habits/' + user.email)
+            .get(`/habits/${user.email}`)
             .expect(200)
-            .expect(function (res) {
-              expect(res.body.length).to.equal(1);
-            })
+            .expect(res => expect(res.body.length).to.equal(1))
             .end(done);
         });
     });

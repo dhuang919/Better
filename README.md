@@ -5,6 +5,8 @@
 > Get Better.  
 ![Better demo](https://cloud.githubusercontent.com/assets/13752714/15801337/c9b6feb4-2a5f-11e6-841a-6f8146c7c7a3.gif)
 
+View the [demo](https://appetize.io/app/61j9jyc2yce3rj73wq6xv9va6w?device=iphone6&scale=75&orientation=portrait&osVersion=9.3) on [appetize.io](https://appetize.io/)
+
 ## Team
 
   - __Product Owner__: Pedro Torres-Mackie
@@ -26,8 +28,8 @@
 
 ## Requirements
 
-- Node 4.4.0
-- npm 3.8.1
+- node >= 4.4.0
+- npm >= 3.8.1
 - Xcode 7.3
 - react-native-cli 0.1.10
 - mongodb 2.1.7

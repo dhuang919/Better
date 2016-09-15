@@ -1,4 +1,3 @@
-// Sets NODE_ENV in order to suppress loggers (morgan)
 process.env.NODE_ENV = 'test';
 
 // Test

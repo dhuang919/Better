@@ -5,6 +5,8 @@
 > Get Better.  
 ![Better demo](https://cloud.githubusercontent.com/assets/13752714/15801337/c9b6feb4-2a5f-11e6-841a-6f8146c7c7a3.gif)
 
+View the [demo](https://appetize.io/app/61j9jyc2yce3rj73wq6xv9va6w?device=iphone6&scale=75&orientation=portrait&osVersion=9.3) on [appetize.io](https://appetize.io/)
+
 ## Team
 
   - __Product Owner__: Pedro Torres-Mackie
@@ -26,46 +28,45 @@
 
 ## Requirements
 
-- Node 4.4.0
-- npm 3.8.1
-- Xcode 7.3
+- node >= 4.4.0
+- npm >= 3.8.1
 - react-native-cli 0.1.10
 - mongodb 2.1.7
+- Xcode 7.3
+- iPhone 6 simulator running iOS 9.3
 
 ## Development
 
 ### Installing Dependencies
 
-From within the root directory:
+In the root directory:
 
 ```sh
 npm install
 ```
 
-From the ios directory:
+In the ios directory:
 
 ```sh
 pod install
 ```
 
-Once all dependencies are finished installing, set the `localServer` flag on line 21 in `index.ios.js` to `true`. This enables development on http://localhost:3000. Then enter:
+Once all dependencies are installed, set the `localServer` to `true` on line 21 in `index.ios.js`. This enables development on http://localhost:3000. Then start up:
 
 ```sh
 mongod
 npm run local
 react-native start
-react-native run-ios
 ```
-This will start up Xcode's iOS simulator.
+Start up Xcode and build the app on the iPhone 6 simulator running iOS 9.3
 
 React Native makes it incredibly easy to develop as you would in a web browser. When any changes are made, simply hit `CMD + R` (on Mac) to reload with your changes.
 
-To run tests, simply enter
+To run tests, simply run
 
 ```sh
 npm test
 ```
-At the moment, all loggers are suppressed when running tests. If you would like to allow logging, comment out the `process.env.NODE_ENV` assignment on line 2 in both `db.spec.js` and `server.spec.js` files.
 
 ### Roadmap
 
